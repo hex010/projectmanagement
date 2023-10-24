@@ -1,0 +1,19 @@
+<header class="p-2 bg-dark">
+    <div class="d-flex align-items-center justify-content-between">
+      <ul class="nav">
+        <li routerLinkActive="myactivenavlink" [routerLinkActiveOptions]="{exact:true}">
+          <a [routerLink]="['/']" class="nav-link px-2">Pagrindinis</a>
+        </li>
+      </ul>
+
+      <h3 class="mt-auto mb-auto text-white">Projektų valdymo sistema</h3>
+
+      <div class="d-flex">
+
+        <div *ngIf="_authService.isLoggedIn()">
+          <button type="button" class="btn btn-outline-light me-2" (click)="_authService.logout()">Atsijungti</button>
+        </div>
+
+      </div>
+    </div>
+</header>
