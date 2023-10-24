@@ -23,6 +23,6 @@ public class AuthService {
             throw new UserDoesNotExistException("Vartotojas nerastas");
         }
 
-        return new LoginRequestDTO(user.getEmail(), user.getRole(), user.getFirstname(), user.getLastname());
+        return new LoginRequestDTO(user.getEmail(), user.getRole(), user.getPassword(), user.getFirstname(), user.getLastname());
     }
 }

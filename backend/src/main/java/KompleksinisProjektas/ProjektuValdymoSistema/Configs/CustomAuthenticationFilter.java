@@ -38,9 +38,14 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
         }
 
         User user = userService.findUserByEmail(email);
+
         if(user == null) {
             throw new UserDoesNotExistException("Vartotojo prisijungimo duomenys neteisingi.");
         }
+        if(!user.getPassword().equals(password)) {
+            throw new UserDoesNotExistException("Vartotojo prisijungimo duomenys neteisingi.");
+        }
+
         String userRole = user.getRole().toString();
 
         List<GrantedAuthority> authorities = new ArrayList<>();

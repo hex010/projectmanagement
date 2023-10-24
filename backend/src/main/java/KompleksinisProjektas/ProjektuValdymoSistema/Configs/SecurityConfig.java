@@ -1,5 +1,6 @@
 package KompleksinisProjektas.ProjektuValdymoSistema.Configs;
 
+import KompleksinisProjektas.ProjektuValdymoSistema.Model.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -25,6 +26,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/login").permitAll()
+                        .requestMatchers("/api/v1/project/create").hasAuthority(Role.Team_leader.name())
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(corsFilter, ChannelProcessingFilter.class)

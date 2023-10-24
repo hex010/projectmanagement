@@ -11,23 +11,29 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { AuthInterceptorService } from './services/AuthInterceptor.service';
 import { AuthGuard } from './guards/auth.guard';
 import { ReactiveFormsModule } from '@angular/forms';
+import { CreateProjectComponent } from './create-project/create-project.component';
+import { ToastrModule } from 'ngx-toastr';
+import { ProjectService } from './services/project.service';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
     HomeComponent,
-    LoginComponent
+    LoginComponent,
+    CreateProjectComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ToastrModule.forRoot()
   ],
   providers: [
     AuthenticationService,
     AuthGuard,
+    ProjectService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptorService,
