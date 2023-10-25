@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ProjectService } from '../services/project.service';
 import { ProjectCreationRequestInterface } from '../models/ProjectCreationRequest.interface';
-import { ToastrService } from 'ngx-toastr';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-create-project',
@@ -19,7 +19,7 @@ export class CreateProjectComponent {
     private formBuilder: FormBuilder,
     private projectService: ProjectService,
     private router: Router,
-    private toastrService: ToastrService
+    private _snackBar: MatSnackBar
   ) {}
 
   ngOnInit() {
@@ -61,7 +61,7 @@ export class CreateProjectComponent {
           this.serverError = err.error.message;
       },
       next: response => { 
-        this.toastrService.success('Projektas sukurtas sėkmingai', 'Pavyko!');
+        this._snackBar.open("Projektas sukurtas sėkmingai");
         this.router.navigate(['/']);
       },
     });

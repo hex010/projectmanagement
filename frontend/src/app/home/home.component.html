@@ -1,4 +1,9 @@
-<div class="page-header m-3 p-2">
-    <h1>Projekto valdymo mygtukai</h1>
+<div *ngIf="isTeamLeaderRole()" class="page-header m-3 p-2">
+    <h1>Projektų valdymo juosta</h1>
     <button class="btn btn-secondary" (click)="navigateToCreateProject()">Pridėti projektą</button>
+</div>
+
+<div *ngIf="isDirectorRole()" class="page-header m-3 p-2">
+    <h1>Administravimo valdymo juosta</h1>
+    <button class="btn btn-secondary" (click)="navigateToAddUser()">Pridėti naudotoją</button>
 </div>

@@ -1,0 +1,20 @@
+<div mat-dialog-content>
+    <div class="text-center">Komandos narių pridėjimas</div>
+    
+    <form [formGroup]="userSelectionForm" class="text-center">
+        
+        <label *ngIf="teamMembers.length === 0">Komandos narių nerasta</label>
+        <mat-form-field appearance="outline">
+            <mat-label>Pasirinkite komandos narį</mat-label>
+            <mat-select formControlName="user" disableRipple (closed)="onUserSelectClose()">
+                <mat-option *ngFor="let user of teamMembers" [value]="user.id">
+                    {{ user.firstname }} {{ user.lastname }} 
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </form>
+</div>
+
+<div mat-dialog-actions class="justify-content-center">
+    <button class="btn btn-secondary" type="submit" (click)="addNewTeamMembersToTheProject()">Pridėti komandos narius į projektą</button>
+</div>

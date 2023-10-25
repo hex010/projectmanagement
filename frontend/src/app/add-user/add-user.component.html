@@ -1,0 +1,41 @@
+<div class="add-user-form">
+    <form [formGroup]="addUserForm" (ngSubmit)="onSubmitLogin()">
+        <h2 class="text-center text-white">Pridėti naudotoją</h2>
+        <div class="mb-3">
+            <input type="email" class="form-control" formControlName="email" placeholder="El. paštas" required="required">
+            <div *ngIf="submitted && addUserForm.controls['email'].errors" class="text-danger">
+                <p *ngIf="addUserForm.get('email')?.hasError('required')">El. paštas yra privalomas.</p>
+                <p *ngIf="addUserForm.get('email')?.hasError('email')">El. pašto formatas neteisingas.</p>
+            </div>
+        </div>
+        <div class="mb-3">
+            <input type="password" class="form-control" formControlName="password" placeholder="Slaptažodis" required="required">
+            <div *ngIf="submitted && addUserForm.controls['password'].errors" class="text-danger">
+              <p *ngIf="addUserForm.get('password')?.hasError('required')">Slaptažodžis yra privalomas.</p>
+             </div>
+        </div>
+        <div class="mb-3">
+            <input type="text" class="form-control" formControlName="firstname" placeholder="Vardas" required="required">
+            <div *ngIf="submitted && addUserForm.controls['firstname'].errors" class="text-danger">
+              <p *ngIf="addUserForm.get('firstname')?.hasError('required')">Vardas yra privalomas.</p>
+             </div>
+        </div>
+        <div class="mb-3">
+            <input type="text" class="form-control" formControlName="lastname" placeholder="Pavardė" required="required">
+            <div *ngIf="submitted && addUserForm.controls['lastname'].errors" class="text-danger">
+              <p *ngIf="addUserForm.get('lastname')?.hasError('required')">Pavardė yra privaloma.</p>
+             </div>
+        </div>
+        <div class="mb-3">
+            <select formControlName="role" class="form-select">
+                <option *ngFor="let role of roles " [value]="role">
+                  {{role}}
+                </option>
+            </select>
+        </div>
+        <div class="mb-1">
+            <button type="submit" class="btn btn-primary w-100">Pridėti naudotoją</button>
+        </div>
+        <span *ngIf="userAddError" class="text-danger d-block text-center">{{ userAddError }}</span> 
+    </form>
+  </div>

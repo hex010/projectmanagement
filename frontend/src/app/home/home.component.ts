@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthenticationService } from '../services/authentication.service';
+import { Role } from '../models/Role.enum';
 
 @Component({
   selector: 'app-home',
@@ -7,11 +9,29 @@ import { Router } from '@angular/router';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent {
+
   constructor( 
-    private router: Router
+    private router: Router,
+    private _auth: AuthenticationService
   ) {}
   
   navigateToCreateProject() {
     this.router.navigate(['project', 'create']);
+  }
+
+  navigateToAddUser() {
+    this.router.navigate(['adduser']);
+  }
+
+  isDirectorRole() : boolean {
+    return this._auth.getRole() == Role[Role.Director];
+  }
+
+  isTeamLeaderRole() : boolean {
+    return this._auth.getRole() == Role[Role.Team_leader];
+  }
+
+  isTeamMemberRole() : boolean {
+    return this._auth.getRole() == Role[Role.Team_member];
   }
 }

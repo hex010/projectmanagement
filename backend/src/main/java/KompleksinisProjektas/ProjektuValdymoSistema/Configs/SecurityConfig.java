@@ -27,6 +27,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/login").permitAll()
                         .requestMatchers("/api/v1/project/create").hasAuthority(Role.Team_leader.name())
+                        .requestMatchers("/api/v1/user/add").hasAuthority(Role.Director.name())
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(corsFilter, ChannelProcessingFilter.class)

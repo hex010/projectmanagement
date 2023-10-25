@@ -12,8 +12,19 @@ import { AuthInterceptorService } from './services/AuthInterceptor.service';
 import { AuthGuard } from './guards/auth.guard';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CreateProjectComponent } from './create-project/create-project.component';
-import { ToastrModule } from 'ngx-toastr';
 import { ProjectService } from './services/project.service';
+import { ProjectPageComponent } from './project-page/project-page.component';
+import { ErrorPageComponent } from './error-page/error-page.component';
+import { ProjectResolver } from './resolvers/project.resolver';
+import { UserService } from './services/user.service';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { ProjectTeamMembersSelectionDialogComponent } from './project-team-members-selection-dialog/project-team-members-selection-dialog.component';
+import { DialogService } from './services/dialog.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AddUserComponent } from './add-user/add-user.component';
 
 @NgModule({
   declarations: [
@@ -21,14 +32,22 @@ import { ProjectService } from './services/project.service';
     HeaderComponent,
     HomeComponent,
     LoginComponent,
-    CreateProjectComponent
+    CreateProjectComponent,
+    ProjectPageComponent,
+    ErrorPageComponent,
+    ProjectTeamMembersSelectionDialogComponent,
+    AddUserComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule,
-    ToastrModule.forRoot()
+    MatDialogModule,
+    MatSnackBarModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    BrowserAnimationsModule
   ],
   providers: [
     AuthenticationService,
@@ -38,7 +57,10 @@ import { ProjectService } from './services/project.service';
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptorService,
       multi: true
-    }
+    },
+    ProjectResolver,
+    UserService,
+    DialogService
   ],
   bootstrap: [AppComponent]
 })

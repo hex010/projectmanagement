@@ -1,5 +1,6 @@
 package KompleksinisProjektas.ProjektuValdymoSistema.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Builder
 @Data
@@ -33,6 +35,9 @@ public class User implements UserDetails {
     private String lastname;
     private Role role;
     private boolean accountNonLocked;
+
+    @ManyToMany
+    private Set<Project> projects;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
