@@ -10,9 +10,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./project-team-members-selection-dialog.component.scss']
 })
 export class ProjectTeamMembersSelectionDialogComponent {
-  teamMembers: UserInterface[] = [];
-  filteredTeamMembers: UserInterface[] = [];
+  teamMembersOrigin: UserInterface[] = [];
+  teamMembersAvailable: UserInterface[] = [];
   userSelectionForm!: FormGroup;
+  selectedTeamMembers: number[] = [];
   
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
 
@@ -29,8 +30,8 @@ export class ProjectTeamMembersSelectionDialogComponent {
     this.userService.getAllTeamMembersForProjectID(this.projectID)
     .subscribe(
       (result) => {
-        this.teamMembers = result;
-        this.filteredTeamMembers = result;
+        this.teamMembersOrigin = result;
+        this.teamMembersAvailable = result;
       },
       (error) => {
         this.dialogRef.close(null);
@@ -39,21 +40,39 @@ export class ProjectTeamMembersSelectionDialogComponent {
     
   }
 
-  onUserSelectClose(){
-    //this.searchInput.nativeElement.value = "";
-    this.filteredTeamMembers = this.teamMembers.slice();
-  }
-
-  filterUsers() {
-
-  }
-
   addNewTeamMembersToTheProject() {
-    const selectedUserId : number = this.userSelectionForm.get('user')?.value;
-
-    if(selectedUserId)
-      this.dialogRef.close(selectedUserId)
+    if(this.selectedTeamMembers.length > 0)
+      this.dialogRef.close(this.selectedTeamMembers)
     else
       this.dialogRef.close(-1)
+  }
+
+  addTeamMemberToList() {
+    const selectedUserId : number = this.userSelectionForm.get('user')?.value;
+    
+    if(selectedUserId) {
+      this.selectedTeamMembers.push(selectedUserId);
+      this.removeTeamMemberById(selectedUserId);
+    }
+
+    this.userSelectionForm.get('user')?.reset();
+  }
+
+  private removeTeamMemberById(id: number) {
+    this.teamMembersAvailable = this.teamMembersAvailable.filter(teamMember => teamMember.id !== id);
+  }
+
+  private findTeamMemberById(id: number): UserInterface | undefined {
+    return this.teamMembersOrigin.find(teamMember => teamMember.id === id);
+  }
+
+  getUserFullNameById(teamMemberId : number) {
+    const teamMember = this.findTeamMemberById(teamMemberId);
+    
+    if(teamMember) {
+      return teamMember.firstname + " " + teamMember.lastname;
+    } else {
+      return "Įvyko klaida!"
+    }
   }
 }

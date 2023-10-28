@@ -1,7 +1,6 @@
 package KompleksinisProjektas.ProjektuValdymoSistema.Controller;
 
 import KompleksinisProjektas.ProjektuValdymoSistema.Service.UserService;
-import KompleksinisProjektas.ProjektuValdymoSistema.dtos.LoginRequestDTO;
 import KompleksinisProjektas.ProjektuValdymoSistema.dtos.UserAddRequestDTO;
 import KompleksinisProjektas.ProjektuValdymoSistema.dtos.UserAddRequestFDTO;
 import KompleksinisProjektas.ProjektuValdymoSistema.dtos.UserDTO;

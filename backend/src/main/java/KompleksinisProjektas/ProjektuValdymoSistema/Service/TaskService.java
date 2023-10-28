@@ -1,24 +1,30 @@
 package KompleksinisProjektas.ProjektuValdymoSistema.Service;
 
-import KompleksinisProjektas.ProjektuValdymoSistema.Exceptions.ProjectDoesNotExistException;
-import KompleksinisProjektas.ProjektuValdymoSistema.Exceptions.UnauthorizedTaskAdditionException;
-import KompleksinisProjektas.ProjektuValdymoSistema.Exceptions.UserDoesNotExistException;
+import KompleksinisProjektas.ProjektuValdymoSistema.Exceptions.*;
 import KompleksinisProjektas.ProjektuValdymoSistema.Model.Project;
 import KompleksinisProjektas.ProjektuValdymoSistema.Model.Task;
 import KompleksinisProjektas.ProjektuValdymoSistema.Model.User;
 import KompleksinisProjektas.ProjektuValdymoSistema.Repository.ProjectRepository;
 import KompleksinisProjektas.ProjektuValdymoSistema.Repository.TaskRepository;
-import KompleksinisProjektas.ProjektuValdymoSistema.Repository.UserRepository;
 import KompleksinisProjektas.ProjektuValdymoSistema.dtos.TaskDTO;
 import KompleksinisProjektas.ProjektuValdymoSistema.dtos.TaskFDTO;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @AllArgsConstructor
 @Service
 public class TaskService {
+    @Value("${file-storage}")
+    private String fileStorageRootPath;
+
     private final TaskRepository taskRepository;
     private final ProjectRepository projectRepository;
 
@@ -47,5 +53,23 @@ public class TaskService {
 
         task = taskRepository.save(task);
         return new TaskDTO(task);
+    }
+
+    public void addTaskDocument(int taskId, MultipartFile taskFile) throws IOException {
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new TaskDoesNotExistException("Tokia projekto užduotis neegzsituoja"));
+
+        if(taskFile.getOriginalFilename() == null) {
+            throw new UploadFileException("Pasirintas projekto failas yra pažeistas");
+        }
+
+        long currentTimeMillis = System.currentTimeMillis();
+        String fileName = currentTimeMillis + "_" + taskFile.getOriginalFilename();
+        Path filePath = Paths.get(fileStorageRootPath, "Tasks", fileName);
+
+        taskFile.transferTo(filePath.toFile());
+
+        task.setFilePath(filePath.toString());
+        taskRepository.save(task);
     }
 }

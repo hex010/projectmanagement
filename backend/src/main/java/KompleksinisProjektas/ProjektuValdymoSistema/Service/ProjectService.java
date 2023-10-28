@@ -1,9 +1,6 @@
 package KompleksinisProjektas.ProjektuValdymoSistema.Service;
 
-import KompleksinisProjektas.ProjektuValdymoSistema.Exceptions.ProjectDoesNotExistException;
-import KompleksinisProjektas.ProjektuValdymoSistema.Exceptions.UserAlreadyExistsInProjectException;
-import KompleksinisProjektas.ProjektuValdymoSistema.Exceptions.UserDoesNotExistException;
-import KompleksinisProjektas.ProjektuValdymoSistema.Exceptions.UserRoleNotMatch;
+import KompleksinisProjektas.ProjektuValdymoSistema.Exceptions.*;
 import KompleksinisProjektas.ProjektuValdymoSistema.Model.Project;
 import KompleksinisProjektas.ProjektuValdymoSistema.Model.Role;
 import KompleksinisProjektas.ProjektuValdymoSistema.Model.User;
@@ -14,11 +11,17 @@ import KompleksinisProjektas.ProjektuValdymoSistema.dtos.ProjectDTO;
 import KompleksinisProjektas.ProjektuValdymoSistema.dtos.ProjectTeamMembersDTO;
 import KompleksinisProjektas.ProjektuValdymoSistema.dtos.UserDTO;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.beans.factory.annotation.Value;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -27,28 +30,25 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
 
-    public Project createNewProject(ProjectCreationFDTO projectCreationFDTO) {
-        Project project = new Project();
-        project.setName(projectCreationFDTO.getName());
-        project.setDescription(projectCreationFDTO.getDescription());
-        project.setFilePath(projectCreationFDTO.getFilePath());
-        project.setStartDate(projectCreationFDTO.getStartDate());
-        project.setEndDate(projectCreationFDTO.getEndDate());
+    @Value("${file-storage}")
+    private String fileStorageRootPath;
 
+    public ProjectDTO createNewProject(ProjectCreationFDTO projectCreationFDTO) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = (String) authentication.getPrincipal();
+        User currentUser = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserDoesNotExistException("Naudotojas su paštu: " + email + " neegzistuoja"));
+
+
+        Project project = new Project(projectCreationFDTO, currentUser);
         project = projectRepository.save(project);
 
-        return project;
+        return new ProjectDTO(project);
     }
 
     public ProjectDTO getProjectById(int id) {
         Project project = projectRepository.findById(id).orElseThrow(() -> new ProjectDoesNotExistException("Toks projektas neegzsituoja"));
-
-        List<UserDTO> teamMembersDTO = project.getTeamMembers()
-                .stream()
-                .map(user -> new UserDTO(user))
-                .collect(Collectors.toList());
-
-        return new ProjectDTO(project.getId(), project.getName(), project.getDescription(), project.getFilePath(), project.getStartDate(), project.getEndDate(), teamMembersDTO);
+        return new ProjectDTO(project);
     }
 
     public ProjectTeamMembersDTO addUsersToProjectTeam(Integer projectId, List<Integer> userIds) {
@@ -75,11 +75,29 @@ public class ProjectService {
 
         project = projectRepository.save(project);
 
-        Set<UserDTO> teamMembersDTO = project.getTeamMembers()
+        List<UserDTO> teamMembersDTO = project.getTeamMembers()
                 .stream()
                 .map(user -> new UserDTO(user))
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
 
         return new ProjectTeamMembersDTO(project.getId(), teamMembersDTO);
+    }
+
+    public void addProjectDocument(int projectId, MultipartFile projectFile) throws IOException {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ProjectDoesNotExistException("Toks projektas neegzsituoja"));
+
+        if(projectFile.getOriginalFilename() == null) {
+            throw new UploadFileException("Pasirintas projekto failas yra pažeistas");
+        }
+
+        long currentTimeMillis = System.currentTimeMillis();
+        String fileName = currentTimeMillis + "_" + projectFile.getOriginalFilename();
+        Path filePath = Paths.get(fileStorageRootPath, "Projects", fileName);
+
+        projectFile.transferTo(filePath.toFile());
+
+        project.setFilePath(filePath.toString());
+        projectRepository.save(project);
     }
 }

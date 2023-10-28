@@ -15,7 +15,6 @@ import java.util.Date;
 public class TaskFDTO {
     private String name;
     private String description;
-    private String filePath;
     private Date startDate;
     private Date endDate;
     private TaskPriority taskPriority;

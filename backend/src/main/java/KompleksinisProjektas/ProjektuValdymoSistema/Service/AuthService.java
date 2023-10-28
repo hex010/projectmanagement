@@ -15,12 +15,8 @@ public class AuthService {
     public LoginRequestDTO findUserAccount(LoginRequestFDTO loginRequest) {
         User user = userService.findUserByEmail(loginRequest.getEmail());
 
-        if(user == null) {
-            throw new UserDoesNotExistException("Vartotojas nerastas");
-        }
-
         if(!user.getPassword().equals(loginRequest.getPassword())) {
-            throw new UserDoesNotExistException("Vartotojas nerastas");
+            throw new UserDoesNotExistException("Naudotojas nerastas");
         }
 
         return new LoginRequestDTO(user.getEmail(), user.getRole(), user.getPassword(), user.getFirstname(), user.getLastname());

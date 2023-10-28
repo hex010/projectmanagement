@@ -4,6 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class ProjektuValdymoSistemaApplication  extends SpringBootServletInitializer{
@@ -16,5 +17,10 @@ public class ProjektuValdymoSistemaApplication  extends SpringBootServletInitial
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application)
 	{
 		return application.sources(ProjektuValdymoSistemaApplication.class);
+	}
+
+	@Bean
+	public String fileStorageRootPath(){
+		return "";
 	}
 }

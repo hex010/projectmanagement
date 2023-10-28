@@ -26,6 +26,7 @@ public class Task {
     private Date startDate;
     private Date endDate;
     private TaskPriority taskPriority;
+    private TaskStatus taskStatus;
 
     @ManyToOne
     @JoinColumn(name = "owner_id")
@@ -38,11 +39,11 @@ public class Task {
     public Task(TaskFDTO taskFDTO, Project project, User foundUser) {
         this.name = taskFDTO.getName();
         this.description = taskFDTO.getDescription();
-        this.filePath = taskFDTO.getFilePath();
         this.startDate = taskFDTO.getStartDate();
         this.endDate = taskFDTO.getEndDate();
         this.taskPriority = taskFDTO.getTaskPriority();
         this.taskOwner = foundUser;
         this.project = project;
+        this.taskStatus = TaskStatus.New;
     }
 }

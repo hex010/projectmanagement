@@ -6,6 +6,7 @@ import { UserInterface } from '../models/User.interface';
 import { TaskPriority } from '../models/TaskPriority.enum';
 import { TaskAdditionRequestInterface } from '../models/TaskAdditionRequest.interface';
 import { TaskService } from '../services/task.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 interface ProjectTeamMemberData {
   projectId: number;
@@ -22,11 +23,13 @@ export class ProjectTasksAdditionDialogComponent {
   public submitted = false;
   public taskPriorityValues = Object.values(TaskPriority);
   public serverError: string = "";
+  public taskSelectedDocument!: File;
 
   constructor(@Inject(MAT_DIALOG_DATA) public projectUserData : ProjectTeamMemberData, 
   private dialogRef : MatDialogRef<ProjectTeamMembersSelectionDialogComponent>,
   private formBuilder : FormBuilder,
-  private taskService : TaskService) {}
+  private taskService : TaskService,
+  private _snackBar: MatSnackBar) {}
 
   ngOnInit() {
     this.taskAdditionForm = this.formBuilder.group({
@@ -34,9 +37,14 @@ export class ProjectTasksAdditionDialogComponent {
         taskDescription: ['', Validators.required],
         startDate: ['', Validators.required],
         endDate: ['', Validators.required],
-        taskDocument: [''],
         taskPriority: ['Medium']
     });
+  }
+
+  onTaskDocumentSelected(event: Event) {
+    const inputElement = event.target as HTMLInputElement;
+    if(inputElement.files)
+      this.taskSelectedDocument = inputElement.files[0];
   }
 
   addNewTaskToTeamMember() {
@@ -48,7 +56,6 @@ export class ProjectTasksAdditionDialogComponent {
 
     const name = this.taskAdditionForm.value.taskName;
     const description = this.taskAdditionForm.value.taskDescription;
-    const filePath = this.taskAdditionForm.value.taskDocument;
     const startDate = this.taskAdditionForm.value.startDate;
     const endDate = this.taskAdditionForm.value.endDate;
     const taskPriority = this.taskAdditionForm.value.taskPriority;
@@ -59,7 +66,6 @@ export class ProjectTasksAdditionDialogComponent {
     const taskData: TaskAdditionRequestInterface = {
       name: name,
       description: description,
-      filePath: filePath,
       startDate: startDate,
       endDate: endDate,
       taskPriority: taskPriority,
@@ -74,10 +80,36 @@ export class ProjectTasksAdditionDialogComponent {
           this.serverError = err.error.message;
       },
       next: response => { 
+        if(this.taskSelectedDocument)
+          this.uploadTaskDocument(response.id);
+        else {
+          this._snackBar.open("Užduotis sėkmingai pridėta komandos nariui", '', {
+            duration: 3000,
+          });
+          this.dialogRef.close(true)
+        }
+      },
+    });
+  }
+
+  uploadTaskDocument(taskId : number) {
+    const formData = new FormData();
+    formData.append('taskFile', this.taskSelectedDocument);
+
+    this.taskService.uploadTaskDocument(taskId, formData).subscribe({
+      error: err => { 
+        this._snackBar.open("Užduotis sėkmingai pridėta komandos nariui, tačiau dokumentą įkelti nepavyko.", '', {
+          duration: 3000,
+        });
+        this.dialogRef.close(true)
+      },
+      next: response => {
+        this._snackBar.open("Užduotis sėkmingai pridėta komandos nariui", '', {
+          duration: 3000,
+        });
         this.dialogRef.close(true)
       },
     });
-
   }
 
 }

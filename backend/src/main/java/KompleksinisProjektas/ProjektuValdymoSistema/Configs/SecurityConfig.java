@@ -27,7 +27,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/login").permitAll()
                         .requestMatchers("/api/v1/project/create").hasAuthority(Role.Team_leader.name())
+                        .requestMatchers("/api/v1/project/addProjectDocument").hasAuthority(Role.Team_leader.name())
+                        .requestMatchers("/api/v1/project/{projectId}/addUsers").hasAuthority(Role.Team_leader.name())
                         .requestMatchers("/api/v1/user/add").hasAuthority(Role.Director.name())
+                        .requestMatchers("/api/v1/task/add").hasAuthority(Role.Team_leader.name())
+                        .requestMatchers("/api/v1/task/uploadProjectDocument/{taskId}").hasAuthority(Role.Team_leader.name())
+                        .requestMatchers("/api/v1/user/getAllTeamMembersNotInProject/{projectID}").hasAuthority(Role.Team_leader.name())
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(corsFilter, ChannelProcessingFilter.class)

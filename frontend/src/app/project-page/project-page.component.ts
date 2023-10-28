@@ -44,11 +44,7 @@ export class ProjectPageComponent {
     if(!userFound) return;
 
     this.dialogService.openProjectTasksAdditionDialog(this.project.id, userFound).afterClosed().pipe(first()).subscribe((succeed) => {
-      if(succeed) {
-        this._snackBar.open("Užduotis sėkmingai pridėta komandos nariui", '', {
-          duration: 3000,
-        });
-      } else {
+      if(!succeed) {
         this._snackBar.open("Užduoties pridėjimas atšauktas", '', {
           duration: 3000,
         });
@@ -57,9 +53,9 @@ export class ProjectPageComponent {
   }
 
   addTeamMembers() {
-    this.dialogService.openProjectTeamMembersSelectionDialog(this.project.id).afterClosed().pipe(first()).subscribe(selectedUserId => {
-      if(selectedUserId) {
-        this.projectService.addUsersToProject(this.project.id, [selectedUserId]).subscribe({
+    this.dialogService.openProjectTeamMembersSelectionDialog(this.project.id).afterClosed().pipe(first()).subscribe(selectedTeamMembers => {
+      if(selectedTeamMembers && selectedTeamMembers.length > 0) {
+        this.projectService.addUsersToProject(this.project.id, selectedTeamMembers).subscribe({
           error: err => { 
             if(err.error.message)
               this._snackBar.open(err.error.message, '', {
@@ -71,6 +67,10 @@ export class ProjectPageComponent {
               duration: 3000,
             });
           },
+        });
+      } else {
+        this._snackBar.open("Komandos narių pridėjimas atšauktas", '', {
+          duration: 3000,
         });
       }
     });

@@ -1,13 +1,14 @@
 package KompleksinisProjektas.ProjektuValdymoSistema.Controller;
 
-import KompleksinisProjektas.ProjektuValdymoSistema.Model.Project;
-import KompleksinisProjektas.ProjektuValdymoSistema.Service.AuthService;
+import KompleksinisProjektas.ProjektuValdymoSistema.Exceptions.StorageSaveException;
 import KompleksinisProjektas.ProjektuValdymoSistema.Service.ProjectService;
 import KompleksinisProjektas.ProjektuValdymoSistema.dtos.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -17,10 +18,20 @@ public class ProjectController {
     private final ProjectService projectService;
 
     @PostMapping("/create")
-    public ResponseEntity<Project> createProject(@RequestBody ProjectCreationFDTO projectCreationFDTO) {
-        Project project = projectService.createNewProject(projectCreationFDTO);
+    public ResponseEntity<ProjectDTO> createProject(@RequestBody ProjectCreationFDTO projectCreationFDTO) {
+        ProjectDTO createdProject = projectService.createNewProject(projectCreationFDTO);
 
-        return ResponseEntity.ok(project);
+        return ResponseEntity.ok(createdProject);
+    }
+
+    @PostMapping("/uploadProjectDocument/{projectId}")
+    public ResponseEntity<Void> addProjectDocument(@PathVariable int projectId, @RequestParam("projectFile") MultipartFile projectFile) {
+        try {
+            projectService.addProjectDocument(projectId, projectFile);
+        } catch (IOException e) {
+            throw new StorageSaveException("Nepavyko įkelti projekto failą");
+        }
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/get/{projectId}")

@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Set;
+import java.util.List;
 
 @Data
 @Builder
@@ -13,5 +13,5 @@ import java.util.Set;
 @NoArgsConstructor
 public class ProjectTeamMembersDTO {
     private int id;
-    private Set<UserDTO> teamMembers;
+    private List<UserDTO> teamMembers;
 }

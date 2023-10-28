@@ -1,7 +1,6 @@
 package KompleksinisProjektas.ProjektuValdymoSistema.Configs;
 
 import KompleksinisProjektas.ProjektuValdymoSistema.Exceptions.UserDoesNotExistException;
-import KompleksinisProjektas.ProjektuValdymoSistema.Exceptions.UserNotLoggedException;
 import KompleksinisProjektas.ProjektuValdymoSistema.Model.User;
 import KompleksinisProjektas.ProjektuValdymoSistema.Service.UserService;
 import jakarta.servlet.FilterChain;
@@ -39,9 +38,6 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
 
         User user = userService.findUserByEmail(email);
 
-        if(user == null) {
-            throw new UserDoesNotExistException("Vartotojo prisijungimo duomenys neteisingi.");
-        }
         if(!user.getPassword().equals(password)) {
             throw new UserDoesNotExistException("Vartotojo prisijungimo duomenys neteisingi.");
         }

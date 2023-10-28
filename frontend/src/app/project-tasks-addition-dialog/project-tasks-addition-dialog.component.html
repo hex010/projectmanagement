@@ -18,7 +18,7 @@
 
         <div class="mb-3">
             <label for="taskDocument">Pasirinkite užduočiai skirtą dokumentą (PDF, DOC, DOCX)</label>
-            <input type="file" class="form-control" formControlName="taskDocument" id="taskDocument" accept=".pdf, .doc, .docx" />
+            <input type="file" class="form-control" id="taskDocument" (change)="onTaskDocumentSelected($event)" accept=".pdf, .doc, .docx" />
         </div>
         
         
@@ -46,7 +46,7 @@
                   </option>
               </select>
         </div>
-        
+
         <span *ngIf="serverError" class="text-danger d-block text-center">{{ serverError }}</span> 
     </form>
 </div>

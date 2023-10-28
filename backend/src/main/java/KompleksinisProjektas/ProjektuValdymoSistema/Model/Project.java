@@ -1,6 +1,6 @@
 package KompleksinisProjektas.ProjektuValdymoSistema.Model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import KompleksinisProjektas.ProjektuValdymoSistema.dtos.ProjectCreationFDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -42,4 +42,12 @@ public class Project {
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private Set<Task> tasks;
+
+    public Project(ProjectCreationFDTO projectCreationFDTO, User teamLeader) {
+        this.name = projectCreationFDTO.getName();
+        this.description = projectCreationFDTO.getDescription();
+        this.startDate = projectCreationFDTO.getStartDate();
+        this.endDate = projectCreationFDTO.getEndDate();
+        this.teamLeader = teamLeader;
+    }
 }

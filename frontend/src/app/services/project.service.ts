@@ -8,12 +8,17 @@ import { ProjectInterface } from "../models/Project.interface";
 export class ProjectService {
     private projectCreationURL = "http://localhost:8080/ProjektuValdymoSistema/api/v1/project/create";
     private getProjectURL = "http://localhost:8080/ProjektuValdymoSistema/api/v1/project/get";
-    private addTeamMembersToProject = "http://localhost:8080/ProjektuValdymoSistema/api/v1/project";
+    private addTeamMembersToProjectURL = "http://localhost:8080/ProjektuValdymoSistema/api/v1/project";
+    private uploadProjectURL = "http://localhost:8080/ProjektuValdymoSistema/api/v1/project/uploadProjectDocument";
 
     constructor(private http: HttpClient) {}
 
-    createProject(projectDate: ProjectCreationRequestInterface) {
-        return this.http.post<ProjectCreationResponseInterface>(this.projectCreationURL, projectDate);
+    createProject(projectData: ProjectCreationRequestInterface) {
+        return this.http.post<ProjectCreationResponseInterface>(this.projectCreationURL, projectData);
+    }
+
+    uploadProjectDocument(projectId: number, formData: FormData) {
+        return this.http.post<any>(`${this.uploadProjectURL}/${projectId}`, formData);
     }
 
     getProject(id: number) {
@@ -21,7 +26,7 @@ export class ProjectService {
     }
 
     addUsersToProject(projectId: number, userIDs: number[]) {
-        const url = `${this.addTeamMembersToProject}/${projectId}/addUsers`;
+        const url = `${this.addTeamMembersToProjectURL}/${projectId}/addUsers`;
         return this.http.post(url, userIDs);
     }
 }

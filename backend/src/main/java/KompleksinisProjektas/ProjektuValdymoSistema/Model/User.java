@@ -1,6 +1,6 @@
 package KompleksinisProjektas.ProjektuValdymoSistema.Model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import KompleksinisProjektas.ProjektuValdymoSistema.dtos.UserAddRequestFDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -67,5 +67,14 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+
+    public User(UserAddRequestFDTO registerRequest) {
+        firstname =  registerRequest.getFirstname();
+        lastname = registerRequest.getLastname();
+        email = registerRequest.getEmail();
+        password = registerRequest.getPassword();
+        role = registerRequest.getRole();
     }
 }
