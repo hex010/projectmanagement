@@ -61,7 +61,9 @@ export class AddUserComponent {
           this.userAddError = err.error.message;
       },
       next: response => { 
-        this._snackBar.open("Sėkmingai pridėta");
+        this._snackBar.open("Sėkmingai pridėta", '', {
+          duration: 3000,
+        });
         this.router.navigate(['/']);
       },
     });

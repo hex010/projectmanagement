@@ -36,7 +36,7 @@ public class User implements UserDetails {
     private Role role;
     private boolean accountNonLocked;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "teamMembers")
     private Set<Project> projects;
 
     @Override

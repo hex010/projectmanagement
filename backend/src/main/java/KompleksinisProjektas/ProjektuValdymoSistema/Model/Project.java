@@ -30,6 +30,16 @@ public class Project {
     private Date startDate;
     private Date endDate;
 
+    @ManyToOne
+    @JoinColumn(name = "team_leader_id")
+    private User teamLeader;
+
     @ManyToMany
-    private Set<User> teamMembers;
+    @JoinTable(name = "project_team_members",
+            joinColumns = @JoinColumn(name = "project_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private List<User> teamMembers;
+
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    private Set<Task> tasks;
 }

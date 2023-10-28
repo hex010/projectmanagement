@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
@@ -32,13 +33,13 @@ public class UserService {
 
         List<User> allUsers = userRepository.findAll();
 
-        Set<User> projectTeamMembers = project.getTeamMembers();
+        List<User> projectTeamMembers = project.getTeamMembers();
 
         List<UserDTO> teamMembersNotInProject = new ArrayList<>();
 
         for (User user : allUsers) {
             if (!projectTeamMembers.contains(user) && user.getRole().equals(Role.Team_member)) {
-                teamMembersNotInProject.add(new UserDTO(user.getId(), user.getFirstname(), user.getLastname()));
+                teamMembersNotInProject.add(new UserDTO(user));
             }
         }
 
@@ -57,6 +58,5 @@ public class UserService {
         user = userRepository.save(user);
 
         return new UserAddRequestDTO(user.getId(), user.getEmail(), user.getPassword(), user.getFirstname(), user.getLastname(), user.getRole());
-
     }
 }

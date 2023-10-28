@@ -25,6 +25,10 @@ import { ProjectTeamMembersSelectionDialogComponent } from './project-team-membe
 import { DialogService } from './services/dialog.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AddUserComponent } from './add-user/add-user.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { ProjectTasksAdditionDialogComponent } from './project-tasks-addition-dialog/project-tasks-addition-dialog.component';
+import { TaskService } from './services/task.service';
 
 @NgModule({
   declarations: [
@@ -36,7 +40,8 @@ import { AddUserComponent } from './add-user/add-user.component';
     ProjectPageComponent,
     ErrorPageComponent,
     ProjectTeamMembersSelectionDialogComponent,
-    AddUserComponent
+    AddUserComponent,
+    ProjectTasksAdditionDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -47,7 +52,9 @@ import { AddUserComponent } from './add-user/add-user.component';
     MatSnackBarModule,
     MatFormFieldModule,
     MatSelectModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MatButtonModule,
+    MatCardModule
   ],
   providers: [
     AuthenticationService,
@@ -60,7 +67,8 @@ import { AddUserComponent } from './add-user/add-user.component';
     },
     ProjectResolver,
     UserService,
-    DialogService
+    DialogService,
+    TaskService
   ],
   bootstrap: [AppComponent]
 })

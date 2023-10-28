@@ -1,3 +1,15 @@
 .page-header {
     background: linear-gradient(90deg, rgba(227, 227, 163, 1) 0%, rgba(250, 209, 250, 1) 100%);
 }
+
+.team-members {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    background: linear-gradient(to bottom,  #cdeb8b 0%, #cdeb8b 100%);
+}
+
+.team-heading {
+    width: 100%;
+}
+

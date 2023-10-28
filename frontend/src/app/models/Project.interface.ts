@@ -1,3 +1,5 @@
+import { UserInterface } from "./User.interface";
+
 export interface ProjectInterface {
     id: number;
     name: string;
@@ -5,4 +7,5 @@ export interface ProjectInterface {
     filePath: string;
     startDate : string;
     endDate : string;
+    teamMembers: UserInterface[];
 }

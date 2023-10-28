@@ -61,7 +61,9 @@ export class CreateProjectComponent {
           this.serverError = err.error.message;
       },
       next: response => { 
-        this._snackBar.open("Projektas sukurtas sėkmingai");
+        this._snackBar.open("Projektas sukurtas sėkmingai", '', {
+          duration: 3000,
+        });
         this.router.navigate(['/']);
       },
     });

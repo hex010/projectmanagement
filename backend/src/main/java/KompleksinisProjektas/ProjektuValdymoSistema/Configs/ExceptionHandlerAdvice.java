@@ -15,7 +15,7 @@ import java.util.Map;
 @RestControllerAdvice
 public class ExceptionHandlerAdvice {
 
-    @ExceptionHandler({UserDoesNotExistException.class, UserNotLoggedException.class})
+    @ExceptionHandler({UserDoesNotExistException.class, UserNotLoggedException.class, UnauthorizedTaskAdditionException.class})
     public ResponseEntity<Map<String, Object>> handleUserDoesNotExistException(RuntimeException ex) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", LocalDateTime.now());

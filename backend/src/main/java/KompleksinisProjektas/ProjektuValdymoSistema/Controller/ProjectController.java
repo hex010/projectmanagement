@@ -30,9 +30,9 @@ public class ProjectController {
     }
 
     @PostMapping("/{projectId}/addUsers")
-    public ResponseEntity<ProjectDTO> addUsersToProjectTeam(
+    public ResponseEntity<ProjectTeamMembersDTO> addUsersToProjectTeam(
             @PathVariable Integer projectId, @RequestBody List<Integer> userIds) {
-        ProjectDTO updatedProject = projectService.addUsersToProjectTeam(projectId, userIds);
-        return ResponseEntity.ok(updatedProject);
+        ProjectTeamMembersDTO projectTeamMembersDTO = projectService.addUsersToProjectTeam(projectId, userIds);
+        return ResponseEntity.ok(projectTeamMembersDTO);
     }
 }
