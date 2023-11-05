@@ -51,7 +51,7 @@ public class ProjectService {
         return new ProjectDTO(project);
     }
 
-    public ProjectTeamMembersDTO addUsersToProjectTeam(Integer projectId, List<Integer> userIds) {
+    public ProjectTeamMembersDTO addUsersToProjectTeam(int projectId, List<Integer> userIds) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new ProjectDoesNotExistException("Toks projektas neegzsituoja"));
 

@@ -31,11 +31,11 @@ export class ProjectPageComponent {
   }
 
   isTeamLeaderRole() : boolean {
-    return this._auth.getRole() == Role[Role.Team_leader];
+    return this._auth.getRole() == Role.Team_leader;
   }
 
   isTeamMemberRole() : boolean {
-    return this._auth.getRole() == Role[Role.Team_member];
+    return this._auth.getRole() == Role.Team_member;
   }
 
   addTasksToTeamMember(userID : number) {

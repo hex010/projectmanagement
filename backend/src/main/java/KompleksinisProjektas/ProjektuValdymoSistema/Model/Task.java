@@ -17,7 +17,7 @@ import java.util.Date;
 @Table(name = "task")
 public class Task {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
     private String name;

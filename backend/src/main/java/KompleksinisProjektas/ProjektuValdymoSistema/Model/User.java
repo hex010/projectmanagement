@@ -22,7 +22,7 @@ import java.util.Set;
 @Table(name = "user")
 public class User implements UserDetails {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
     @Column(unique=true, length = 70)

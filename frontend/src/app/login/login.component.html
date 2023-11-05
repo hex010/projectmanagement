@@ -11,7 +11,7 @@
         <div class="mb-3">
             <input type="password" class="form-control" formControlName="password" placeholder="Slaptažodis" required="required">
             <div *ngIf="submitted && loginForm.controls['password'].errors" class="text-danger">
-              <p *ngIf="loginForm.get('password')?.hasError('required')">Slaptažodžis yra privalomas.</p>
+              <p *ngIf="loginForm.get('password')?.hasError('required')">Slaptažodis yra privalomas.</p>
              </div>
         </div>
         <div class="mb-1">

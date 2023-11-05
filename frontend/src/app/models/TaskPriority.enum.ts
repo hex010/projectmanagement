@@ -1,3 +1,3 @@
 export enum TaskPriority {
-    High, Medium, Low
+    High = "Aukštas", Medium = "Vidutinis", Low = "Žemas"
 }

@@ -19,7 +19,7 @@ import java.util.Set;
 @Table(name = "project")
 public class Project {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
     @Column(length = 50)

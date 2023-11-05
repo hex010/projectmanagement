@@ -1,3 +1,3 @@
 export enum Role {
-    Director, Team_leader, Team_member
+    Director = "Direktorius", Team_leader = "Projekto vadovas", Team_member = "Komandos narys"
 }

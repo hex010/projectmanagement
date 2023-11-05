@@ -37,7 +37,7 @@ export class ProjectTasksAdditionDialogComponent {
         taskDescription: ['', Validators.required],
         startDate: ['', Validators.required],
         endDate: ['', Validators.required],
-        taskPriority: ['Medium']
+        taskPriority: [TaskPriority.Medium]
     });
   }
 
@@ -58,7 +58,7 @@ export class ProjectTasksAdditionDialogComponent {
     const description = this.taskAdditionForm.value.taskDescription;
     const startDate = this.taskAdditionForm.value.startDate;
     const endDate = this.taskAdditionForm.value.endDate;
-    const taskPriority = this.taskAdditionForm.value.taskPriority;
+    const taskPriority = this.taskService.getTaskPriorityKeyByValue(this.taskAdditionForm.value.taskPriority);
 
     const ownerId = this.projectUserData.teamMember.id;
     const projectId = this.projectUserData.projectId;

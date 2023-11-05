@@ -44,6 +44,6 @@ export class AuthenticationService {
         localStorage.removeItem('role');
         localStorage.removeItem('firstname');
         localStorage.removeItem('lastname');
-        this.router.navigate(['/'])
+        this.router.navigate(['/login'])
     }
 }

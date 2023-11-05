@@ -5,7 +5,7 @@ export interface TaskAdditionRequestInterface {
     description: string;
     startDate : string;
     endDate : string;
-    taskPriority: TaskPriority
+    taskPriority: string;
     ownerId : number;
     projectId : number;
 }
