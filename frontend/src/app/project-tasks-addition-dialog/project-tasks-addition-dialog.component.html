@@ -1,18 +1,18 @@
 <div mat-dialog-content>
-    <div class="text-center">Užduoties priskyrimas {{projectUserData.teamMember.firstname}} {{projectUserData.teamMember.lastname}}</div>
+    <div class="text-center" id="taskAdditionLabel">Užduoties priskyrimas {{projectUserData.teamMember.firstname}} {{projectUserData.teamMember.lastname}}</div>
     
     <form [formGroup]="taskAdditionForm" class="text-center">
         <div class="mb-3">
             <input type="text" class="form-control" formControlName="taskName" placeholder="Užduoties pavadinimas" required="required">
             <div *ngIf="submitted && taskAdditionForm.controls['taskName'].errors" class="text-danger">
-                <p *ngIf="taskAdditionForm.get('taskName')?.hasError('required')">Užduoties pavadinimas yra privalomas.</p>
+                <p id="nameRequiredError" *ngIf="taskAdditionForm.get('taskName')?.hasError('required')">Užduoties pavadinimas yra privalomas.</p>
             </div>
         </div>
 
         <div class="mb-3">
             <textarea class="form-control" formControlName="taskDescription" placeholder="Užduoties aprašymas" required="required"></textarea>
             <div *ngIf="submitted && taskAdditionForm.controls['taskDescription'].errors" class="text-danger">
-                <p *ngIf="taskAdditionForm.get('taskDescription')?.hasError('required')">Užduoties aprašymas yra privalomas.</p>
+                <p id="descriptionRequiredError" *ngIf="taskAdditionForm.get('taskDescription')?.hasError('required')">Užduoties aprašymas yra privalomas.</p>
             </div>
         </div>
 
@@ -26,7 +26,7 @@
             <label for="startDate">Užduoties pradžios data</label>
             <input type="date" class="form-control" formControlName="startDate" required="required">
             <div *ngIf="submitted && taskAdditionForm.controls['startDate'].errors" class="text-danger">
-                <p *ngIf="taskAdditionForm.get('startDate')?.hasError('required')">Užduoties pradžios data yra privaloma.</p>
+                <p id="startDateRequiredError" *ngIf="taskAdditionForm.get('startDate')?.hasError('required')">Užduoties pradžios data yra privaloma.</p>
             </div>
         </div>
         
@@ -34,7 +34,7 @@
             <label for="endDate">Užduoties pabaigos data</label>
             <input type="date" class="form-control" formControlName="endDate" required="required">
             <div *ngIf="submitted && taskAdditionForm.controls['endDate'].errors" class="text-danger">
-                <p *ngIf="taskAdditionForm.get('endDate')?.hasError('required')">Užduoties pabaigos data yra privaloma.</p>
+                <p id="endDateRequiredError" *ngIf="taskAdditionForm.get('endDate')?.hasError('required')">Užduoties pabaigos data yra privaloma.</p>
             </div>
         </div>
 
@@ -47,10 +47,10 @@
               </select>
         </div>
 
-        <span *ngIf="serverError" class="text-danger d-block text-center">{{ serverError }}</span> 
+        <span *ngIf="serverError" class="text-danger d-block text-center" id="errorFromServerLabel">{{ serverError }}</span> 
     </form>
 </div>
 
 <div mat-dialog-actions class="justify-content-center">
-    <button class="btn btn-secondary" type="submit" (click)="addNewTaskToTeamMember()">Pridėti užduotį komandos nariui</button>
+    <button class="btn btn-secondary" type="submit" (click)="addNewTaskToTeamMember()" id="addTaskToTeamMemberButton">Pridėti užduotį komandos nariui</button>
 </div>

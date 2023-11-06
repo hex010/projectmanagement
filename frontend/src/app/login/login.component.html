@@ -1,22 +1,22 @@
 <div class="login-form">
     <form [formGroup]="loginForm" (ngSubmit)="onSubmitLogin()">
-        <h2 class="text-center text-white">Prisijungimo forma</h2>
+        <h2 class="text-center text-white" id="loginFormTitle">Prisijungimo forma</h2>
         <div class="mb-3">
             <input type="email" class="form-control" formControlName="email" placeholder="El. paštas" required="required">
             <div *ngIf="submitted && loginForm.controls['email'].errors" class="text-danger">
-                <p *ngIf="loginForm.get('email')?.hasError('required')">El. paštas yra privalomas.</p>
-                <p *ngIf="loginForm.get('email')?.hasError('email')">El. pašto formatas neteisingas.</p>
+                <p id="emailRequiredError" *ngIf="loginForm.get('email')?.hasError('required')">El. paštas yra privalomas.</p>
+                <p id="emailFormatError" *ngIf="loginForm.get('email')?.hasError('email')">El. pašto formatas neteisingas.</p>
             </div>
         </div>
         <div class="mb-3">
             <input type="password" class="form-control" formControlName="password" placeholder="Slaptažodis" required="required">
             <div *ngIf="submitted && loginForm.controls['password'].errors" class="text-danger">
-              <p *ngIf="loginForm.get('password')?.hasError('required')">Slaptažodis yra privalomas.</p>
+              <p id="passwordRequiredError" *ngIf="loginForm.get('password')?.hasError('required')">Slaptažodis yra privalomas.</p>
              </div>
         </div>
         <div class="mb-1">
-            <button type="submit" class="btn btn-primary w-100">Prisijungti</button>
+            <button type="submit" class="btn btn-primary w-100" id="loginButton">Prisijungti</button>
         </div>
-        <span *ngIf="loginError" class="text-danger d-block text-center">{{ loginError }}</span> 
+        <span *ngIf="loginError" class="text-danger d-block text-center" id="errorFromServerLabel">{{ loginError }}</span> 
     </form>
   </div>

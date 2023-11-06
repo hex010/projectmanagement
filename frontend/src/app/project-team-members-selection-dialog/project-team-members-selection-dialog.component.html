@@ -1,5 +1,5 @@
 <div mat-dialog-content>
-    <div class="text-center"><h1>Komandos narių pridėjimas</h1></div>
+    <div class="text-center" id="memberSelectionLabel"><h1>Komandos narių pridėjimas</h1></div>
     
     <form [formGroup]="userSelectionForm" class="text-center">
         
@@ -13,12 +13,12 @@
             </mat-select>
         </mat-form-field>
         
-        <button mat-button [disabled]="!userSelectionForm.get('user')?.value" (click)="addTeamMemberToList()">Pridėti į sąrašą</button>
+        <button mat-button [disabled]="!userSelectionForm.get('user')?.value" (click)="addTeamMemberToList()" id="addToTheListButton">Pridėti į sąrašą</button>
     </form>
 
     <div *ngIf="selectedTeamMembers.length > 0" class="text-center">
-        <h2>Pasirinkti komandos nariai:</h2>
-        <ul>
+        <h2 id="selectedTeamMembersLabel">Pasirinkti komandos nariai:</h2>
+        <ul id="selectedTeamMembersList">
             <li *ngFor="let teamMemberId of selectedTeamMembers">
                 {{ getUserFullNameById(teamMemberId) }}
             </li>
@@ -28,5 +28,5 @@
 
 
 <div mat-dialog-actions class="justify-content-center">
-    <button class="btn btn-secondary" type="submit" [disabled]="selectedTeamMembers.length === 0" (click)="addNewTeamMembersToTheProject()">Pridėti komandos narius į projektą</button>
+    <button class="btn btn-secondary" type="submit" [disabled]="selectedTeamMembers.length === 0" (click)="addNewTeamMembersToTheProject()" id="addToTheProjectButton">Pridėti komandos narius į projektą</button>
 </div>

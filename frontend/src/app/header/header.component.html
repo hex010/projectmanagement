@@ -11,7 +11,7 @@
       <div class="d-flex">
 
         <div *ngIf="_authService.isLoggedIn()">
-          <button type="button" class="btn btn-outline-light me-2" (click)="_authService.logout()">Atsijungti</button>
+          <button type="button" id="logoutButton" class="btn btn-outline-light me-2" (click)="_authService.logout()">Atsijungti</button>
         </div>
 
       </div>

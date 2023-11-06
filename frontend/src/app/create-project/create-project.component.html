@@ -1,18 +1,18 @@
 <div class="project-creation-form">
     <form [formGroup]="projectCreationForm" (ngSubmit)="onSubmitProjectCreation()">
-        <h2 class="text-center text-white">Sukurti naują projektą</h2>
+        <h2 class="text-center text-white" id="createNewProjectTitle">Sukurti naują projektą</h2>
 
         <div class="mb-3">
             <input type="text" class="form-control" formControlName="projectName" placeholder="Projekto pavadinimas" required="required">
             <div *ngIf="submitted && projectCreationForm.controls['projectName'].errors" class="text-danger">
-                <p *ngIf="projectCreationForm.get('projectName')?.hasError('required')">Projekto pavadinimas yra privalomas.</p>
+                <p id="nameRequiredError" *ngIf="projectCreationForm.get('projectName')?.hasError('required')">Projekto pavadinimas yra privalomas.</p>
             </div>
         </div>
 
         <div class="mb-3">
             <textarea class="form-control" formControlName="projectDescription" placeholder="Projekto aprašymas" required="required"></textarea>
             <div *ngIf="submitted && projectCreationForm.controls['projectDescription'].errors" class="text-danger">
-                <p *ngIf="projectCreationForm.get('projectDescription')?.hasError('required')">Projekto aprašymas yra privalomas.</p>
+                <p id="descriptionRequiredError" *ngIf="projectCreationForm.get('projectDescription')?.hasError('required')">Projekto aprašymas yra privalomas.</p>
             </div>
         </div>
 
@@ -26,7 +26,7 @@
             <label for="startDate">Projekto pradžios data</label>
             <input type="date" class="form-control" formControlName="startDate" required="required">
             <div *ngIf="submitted && projectCreationForm.controls['startDate'].errors" class="text-danger">
-                <p *ngIf="projectCreationForm.get('startDate')?.hasError('required')">Projekto pradžios data yra privaloma.</p>
+                <p id="startDateRequiredError" *ngIf="projectCreationForm.get('startDate')?.hasError('required')">Projekto pradžios data yra privaloma.</p>
             </div>
         </div>
         
@@ -34,14 +34,14 @@
             <label for="endDate">Projekto pabaigos data</label>
             <input type="date" class="form-control" formControlName="endDate" required="required">
             <div *ngIf="submitted && projectCreationForm.controls['endDate'].errors" class="text-danger">
-                <p *ngIf="projectCreationForm.get('endDate')?.hasError('required')">Projekto pabaigos data yra privaloma.</p>
+                <p id="endDateRequiredError" *ngIf="projectCreationForm.get('endDate')?.hasError('required')">Projekto pabaigos data yra privaloma.</p>
             </div>
         </div>
 
         <div class="mb-1">
-            <button type="submit" class="btn btn-primary w-100">Sukurti</button>
+            <button type="submit" class="btn btn-primary w-100" id="createButton">Sukurti</button>
         </div>
 
-        <span *ngIf="serverError" class="text-danger d-block text-center">{{ serverError }}</span> 
+        <span *ngIf="serverError" class="text-danger d-block text-center" id="errorFromServerLabel">{{ serverError }}</span> 
     </form>
   </div>
