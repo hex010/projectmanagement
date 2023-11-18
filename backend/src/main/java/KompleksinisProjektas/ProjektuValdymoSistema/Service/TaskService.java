@@ -2,10 +2,12 @@ package KompleksinisProjektas.ProjektuValdymoSistema.Service;
 
 import KompleksinisProjektas.ProjektuValdymoSistema.Exceptions.*;
 import KompleksinisProjektas.ProjektuValdymoSistema.Model.Project;
+import KompleksinisProjektas.ProjektuValdymoSistema.Model.Role;
 import KompleksinisProjektas.ProjektuValdymoSistema.Model.Task;
 import KompleksinisProjektas.ProjektuValdymoSistema.Model.User;
 import KompleksinisProjektas.ProjektuValdymoSistema.Repository.ProjectRepository;
 import KompleksinisProjektas.ProjektuValdymoSistema.Repository.TaskRepository;
+import KompleksinisProjektas.ProjektuValdymoSistema.Repository.UserRepository;
 import KompleksinisProjektas.ProjektuValdymoSistema.dtos.TaskDTO;
 import KompleksinisProjektas.ProjektuValdymoSistema.dtos.TaskFDTO;
 import lombok.AllArgsConstructor;
@@ -18,6 +20,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 @AllArgsConstructor
 @Service
@@ -27,6 +31,7 @@ public class TaskService {
 
     private final TaskRepository taskRepository;
     private final ProjectRepository projectRepository;
+    private final UserRepository userRepository;
 
     public TaskDTO addTaskToProject(TaskFDTO taskFDTO) {
         Project project = projectRepository.findById(taskFDTO.getProjectId())
@@ -71,5 +76,30 @@ public class TaskService {
 
         task.setFilePath(filePath.toString());
         taskRepository.save(task);
+    }
+
+    public List<TaskDTO> getAssignedTasksOfProject(int projectId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = (String) authentication.getPrincipal();
+        User currentUser = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserDoesNotExistException("Naudotojas su paštu: " + email + " neegzistuoja"));
+
+        Project project = projectRepository.findById(projectId).orElseThrow(() -> new ProjectDoesNotExistException("Toks projektas neegzsituoja"));
+
+        List<TaskDTO> myTasks = new ArrayList<>();
+
+        if(currentUser.getRole().equals(Role.Team_member)) {
+            for (Task task : project.getTasks()) {
+                if (task.getTaskOwner().getId().equals(currentUser.getId())) {
+                    myTasks.add(new TaskDTO(task));
+                }
+            }
+        } else {
+            for (Task task : project.getTasks()) {
+                myTasks.add(new TaskDTO(task));
+            }
+        }
+
+        return myTasks;
     }
 }

@@ -2,6 +2,7 @@ package KompleksinisProjektas.ProjektuValdymoSistema.Service;
 
 import KompleksinisProjektas.ProjektuValdymoSistema.Exceptions.*;
 import KompleksinisProjektas.ProjektuValdymoSistema.Model.Project;
+import KompleksinisProjektas.ProjektuValdymoSistema.Model.ProjectStatus;
 import KompleksinisProjektas.ProjektuValdymoSistema.Model.Role;
 import KompleksinisProjektas.ProjektuValdymoSistema.Model.User;
 import KompleksinisProjektas.ProjektuValdymoSistema.Repository.ProjectRepository;
@@ -99,5 +100,32 @@ public class ProjectService {
 
         project.setFilePath(filePath.toString());
         projectRepository.save(project);
+    }
+
+    public List<ProjectDTO> getAssignedProjects() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = (String) authentication.getPrincipal();
+        User currentUser = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserDoesNotExistException("Naudotojas su paštu: " + email + " neegzistuoja"));
+
+        List<Project> assignedProjects;
+
+        if(currentUser.getRole() == Role.Team_leader) {
+            assignedProjects = projectRepository.findByTeamLeaderIdAndProjectStatus(currentUser.getId(), ProjectStatus.InProgress);
+        }
+        else if(currentUser.getRole() == Role.Team_member) {
+            assignedProjects = currentUser.getProjects()
+                    .stream()
+                    .filter(project -> project.getProjectStatus() == ProjectStatus.InProgress)
+                    .toList();
+        } else {
+            assignedProjects = projectRepository.findAll();
+        }
+        List<ProjectDTO> assignedProjectsDTOs = new ArrayList<>();
+        for(Project assignedProject : assignedProjects) {
+            assignedProjectsDTOs.add(new ProjectDTO(assignedProject));
+        }
+
+        return assignedProjectsDTOs;
     }
 }

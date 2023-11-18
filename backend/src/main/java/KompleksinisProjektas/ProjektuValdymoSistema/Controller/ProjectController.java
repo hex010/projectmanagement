@@ -40,6 +40,12 @@ public class ProjectController {
         return ResponseEntity.ok(projectDTO);
     }
 
+    @GetMapping("/get/assigned")
+    public ResponseEntity<List<ProjectDTO>> getAssignedProjects() {
+        List<ProjectDTO> projectDTOs = projectService.getAssignedProjects();
+        return ResponseEntity.ok(projectDTOs);
+    }
+
     @PostMapping("/{projectId}/addUsers")
     public ResponseEntity<ProjectTeamMembersDTO> addUsersToProjectTeam(
             @PathVariable int projectId, @RequestBody List<Integer> userIds) {

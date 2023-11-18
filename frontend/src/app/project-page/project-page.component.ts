@@ -8,6 +8,8 @@ import { first } from 'rxjs';
 import { ProjectService } from '../services/project.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserInterface } from '../models/User.interface';
+import { TaskAdditionResponseInterface } from '../models/TaskAdditionResponse.interface';
+import { TaskService } from '../services/task.service';
 
 @Component({
   selector: 'app-project-page',
@@ -16,18 +18,30 @@ import { UserInterface } from '../models/User.interface';
 })
 export class ProjectPageComponent {
   public project!: ProjectInterface;
+  public assignedTasks: TaskAdditionResponseInterface[] = [];
 
   constructor(private route: ActivatedRoute, 
     private router: Router, 
     private _auth: AuthenticationService, 
     private dialogService: DialogService, 
     private projectService: ProjectService,
+    private taskService: TaskService,
     private _snackBar: MatSnackBar) {}
   
   ngOnInit(): void {
     this.route.data.subscribe(data => {
       this.project = data['project'];
     })
+
+    this.taskService.getAssignedProjects(this.project.id).subscribe(
+      (data) => {
+        this.assignedTasks = data;
+      }
+    );
+  }
+
+  isDirectorRole() : boolean {
+    return this._auth.getRole() == Role.Director
   }
 
   isTeamLeaderRole() : boolean {
@@ -35,7 +49,7 @@ export class ProjectPageComponent {
   }
 
   isTeamMemberRole() : boolean {
-    return this._auth.getRole() == Role.Team_member;
+    return this._auth.getRole() == Role.Team_member
   }
 
   addTasksToTeamMember(userID : number) {
@@ -75,4 +89,9 @@ export class ProjectPageComponent {
       }
     });
   }
+
+  openTaskPage(taskID : number) {
+
+  }
+  
 }

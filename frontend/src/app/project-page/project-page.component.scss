@@ -13,3 +13,15 @@
     width: 100%;
 }
 
+
+.assignedTasks {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    background: linear-gradient(to bottom,  #cdeb8b 0%, #cdeb8b 100%);
+}
+
+.assignedTasksHeading {
+    width: 100%;
+}
+

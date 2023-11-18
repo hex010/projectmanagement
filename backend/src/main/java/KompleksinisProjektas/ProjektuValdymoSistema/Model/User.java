@@ -37,7 +37,7 @@ public class User implements UserDetails {
     private boolean accountNonLocked;
 
     @ManyToMany(mappedBy = "teamMembers")
-    private Set<Project> projects;
+    private List<Project> projects;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

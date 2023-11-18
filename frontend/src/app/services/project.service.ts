@@ -3,11 +3,13 @@ import { Injectable } from "@angular/core";
 import { ProjectCreationRequestInterface } from "../models/ProjectCreationRequest.interface";
 import { ProjectCreationResponseInterface } from "../models/ProjectCreationRespons.interface";
 import { ProjectInterface } from "../models/Project.interface";
+import { Observable } from "rxjs";
 
 @Injectable()
 export class ProjectService {
     private projectCreationURL = "http://localhost:8080/ProjektuValdymoSistema/api/v1/project/create";
     private getProjectURL = "http://localhost:8080/ProjektuValdymoSistema/api/v1/project/get";
+    private getAssignedProjectsURL = "http://localhost:8080/ProjektuValdymoSistema/api/v1/project/get/assigned"
     private addTeamMembersToProjectURL = "http://localhost:8080/ProjektuValdymoSistema/api/v1/project";
     private uploadProjectURL = "http://localhost:8080/ProjektuValdymoSistema/api/v1/project/uploadProjectDocument";
 
@@ -28,5 +30,9 @@ export class ProjectService {
     addUsersToProject(projectId: number, userIDs: number[]) {
         const url = `${this.addTeamMembersToProjectURL}/${projectId}/addUsers`;
         return this.http.post(url, userIDs);
+    }
+
+    getAssignedProjects(): Observable<ProjectInterface[]> {
+        return this.http.get<ProjectInterface[]>(this.getAssignedProjectsURL);
     }
 }

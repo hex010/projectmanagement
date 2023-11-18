@@ -30,6 +30,8 @@ public class Project {
     private Date startDate;
     private Date endDate;
 
+    private ProjectStatus projectStatus;
+
     @ManyToOne
     @JoinColumn(name = "team_leader_id")
     private User teamLeader;
@@ -41,7 +43,7 @@ public class Project {
     private List<User> teamMembers;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
-    private Set<Task> tasks;
+    private List<Task> tasks;
 
     public Project(ProjectCreationFDTO projectCreationFDTO, User teamLeader) {
         this.name = projectCreationFDTO.getName();

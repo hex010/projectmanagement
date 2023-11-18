@@ -3,7 +3,7 @@
     <button class="btn btn-secondary" (click)="addTeamMembers()" id="addTeamMembersButton">Pridėti komandos narius (-į)</button>
 </div>
 
-<div class="team-members mx-3 p-2">
+<div *ngIf="isTeamLeaderRole()" class="team-members mx-3 p-2">
     <div class="team-heading">
         <h2 class="m-0" id="projectTeamMembersLabel">Projekto komandos nariai</h2>
     </div>
@@ -18,4 +18,17 @@
     </mat-card>
 </div>
 
-  
+<div class="assignedTasks m-3 p-2">
+    <div class="team-heading">
+        <h2 class="m-0" id="projectTeamMembersLabel">Priskirtos projekto užduotys ({{assignedTasks.length}})</h2>
+    </div>
+    <mat-card *ngFor="let task of assignedTasks" class="my-2">
+        <mat-card-header>
+            <mat-card-title>{{task.name}}</mat-card-title>
+            <mat-card-subtitle>{{ task.description }}</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-actions>
+            <button mat-button (click)="openTaskPage(task.id)" id="openTaskPageButton">Peržiūrėti</button>
+          </mat-card-actions>
+    </mat-card>
+</div>

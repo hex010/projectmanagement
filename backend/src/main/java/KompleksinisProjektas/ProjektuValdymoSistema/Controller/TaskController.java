@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 
 @RestController
@@ -32,5 +33,11 @@ public class TaskController {
             throw new StorageSaveException("Nepavyko įkelti užduoties failą");
         }
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/get/assigned/{projectId}")
+    public ResponseEntity<List<TaskDTO>> getAssignedTasksOfProject(@PathVariable int projectId) {
+        List<TaskDTO> tasks = taskService.getAssignedTasksOfProject(projectId);
+        return ResponseEntity.ok(tasks);
     }
 }
