@@ -1,6 +1,7 @@
 package KompleksinisProjektas.ProjektuValdymoSistema.Controller;
 
 import KompleksinisProjektas.ProjektuValdymoSistema.Exceptions.StorageSaveException;
+import KompleksinisProjektas.ProjektuValdymoSistema.Model.ProjectStatus;
 import KompleksinisProjektas.ProjektuValdymoSistema.Service.ProjectService;
 import KompleksinisProjektas.ProjektuValdymoSistema.dtos.*;
 import lombok.RequiredArgsConstructor;
@@ -51,5 +52,11 @@ public class ProjectController {
             @PathVariable int projectId, @RequestBody List<Integer> userIds) {
         ProjectTeamMembersDTO projectTeamMembersDTO = projectService.addUsersToProjectTeam(projectId, userIds);
         return ResponseEntity.ok(projectTeamMembersDTO);
+    }
+
+    @PutMapping("/finish")
+    public ResponseEntity<ProjectStatus> finishProject(@RequestBody ProjectFinishFDTO projectFinishFDTO) {
+        ProjectStatus projectStatus = projectService.finishProject(projectFinishFDTO);
+        return ResponseEntity.ok(projectStatus);
     }
 }

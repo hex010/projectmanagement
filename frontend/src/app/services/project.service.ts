@@ -4,6 +4,8 @@ import { ProjectCreationRequestInterface } from "../models/ProjectCreationReques
 import { ProjectCreationResponseInterface } from "../models/ProjectCreationRespons.interface";
 import { ProjectInterface } from "../models/Project.interface";
 import { Observable } from "rxjs";
+import { ProjectStatus } from "../models/ProjectStatus.enum";
+import { ProjectFinishRequest } from "../models/ProjectFinishRequest.interface";
 
 @Injectable()
 export class ProjectService {
@@ -12,6 +14,7 @@ export class ProjectService {
     private getAssignedProjectsURL = "http://localhost:8080/ProjektuValdymoSistema/api/v1/project/get/assigned"
     private addTeamMembersToProjectURL = "http://localhost:8080/ProjektuValdymoSistema/api/v1/project";
     private uploadProjectURL = "http://localhost:8080/ProjektuValdymoSistema/api/v1/project/uploadProjectDocument";
+    private finishProjectURL = "http://localhost:8080/ProjektuValdymoSistema/api/v1/project/finish";
 
     constructor(private http: HttpClient) {}
 
@@ -34,5 +37,9 @@ export class ProjectService {
 
     getAssignedProjects(): Observable<ProjectInterface[]> {
         return this.http.get<ProjectInterface[]>(this.getAssignedProjectsURL);
+    }
+
+    finishProject(projectFinishRequest : ProjectFinishRequest) {
+        return this.http.put<ProjectStatus>(this.finishProjectURL, projectFinishRequest);
     }
 }

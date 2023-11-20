@@ -29,6 +29,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { ProjectTasksAdditionDialogComponent } from './project-tasks-addition-dialog/project-tasks-addition-dialog.component';
 import { TaskService } from './services/task.service';
+import { ProjectTaskPageComponent } from './project-task-page/project-task-page.component';
+import { TaskResolver } from './resolvers/task.resolver';
+import { ProjectFinishDialogComponent } from './project-finish-dialog/project-finish-dialog.component';
+import { TaskFinishDialogComponent } from './task-finish-dialog/task-finish-dialog.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +45,10 @@ import { TaskService } from './services/task.service';
     ErrorPageComponent,
     ProjectTeamMembersSelectionDialogComponent,
     AddUserComponent,
-    ProjectTasksAdditionDialogComponent
+    ProjectTasksAdditionDialogComponent,
+    ProjectTaskPageComponent,
+    ProjectFinishDialogComponent,
+    TaskFinishDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -66,6 +73,7 @@ import { TaskService } from './services/task.service';
       multi: true
     },
     ProjectResolver,
+    TaskResolver,
     UserService,
     DialogService,
     TaskService

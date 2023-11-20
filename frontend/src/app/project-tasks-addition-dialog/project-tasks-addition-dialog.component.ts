@@ -26,7 +26,7 @@ export class ProjectTasksAdditionDialogComponent {
   public taskSelectedDocument!: File;
 
   constructor(@Inject(MAT_DIALOG_DATA) public projectUserData : ProjectTeamMemberData, 
-  private dialogRef : MatDialogRef<ProjectTeamMembersSelectionDialogComponent>,
+  private dialogRef : MatDialogRef<ProjectTasksAdditionDialogComponent>,
   private formBuilder : FormBuilder,
   private taskService : TaskService,
   private _snackBar: MatSnackBar) {}

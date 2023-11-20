@@ -31,7 +31,7 @@ public class ExceptionHandlerAdvice {
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler({UserAlreadyExistsInProjectException.class, UserRoleNotMatch.class, UserAlreadyExistsException.class})
+    @ExceptionHandler({UserAlreadyExistsInProjectException.class, UserRoleNotMatch.class, UserAlreadyExistsException.class, ProjectFinishException.class})
     public ResponseEntity<Map<String, Object>> handleConflictExceptions(RuntimeException ex) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", LocalDateTime.now());

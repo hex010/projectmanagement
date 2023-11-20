@@ -1,0 +1,35 @@
+<div class="container">
+    <div class="taskName">
+        <h1 class="d-inline">Pavadinimas: </h1> 
+        <h2 class="d-inline"><b>{{task.name}}</b></h2>
+    </div>
+
+    <div class="taskDescription mt-2">
+        <h1 class="d-inline">Aprašymas: </h1>
+        <h2 class="d-inline"><b>{{task.description}}</b></h2>
+    </div>
+
+    <div class="taskDate mt-2">
+        <h1 class="d-inline">Atlikimo terminas: </h1>
+        <h2 class="d-inline"><b>{{task.startDate | date:'yyyy-MM-dd'}} — {{task.endDate | date:'yyyy-MM-dd'}}</b></h2>
+    </div>
+
+    <div class="taskDescription mt-2">
+        <h1 class="d-inline">Užtuoties atlikimo prioritetas: </h1>
+        <h2 class="d-inline"><b>{{task.taskPriority}}</b></h2>
+    </div>
+
+    <h1 class="mt-2 mb-1 mr-2">Užtuoties atlikimo statusas:</h1>
+    <div class="d-flex">
+        <form [formGroup]="taskForm" style="margin-right: 10px;" class="flex-grow-1">
+            <select class="form-control" formControlName="taskStatus">
+                <option *ngFor="let taskStatus of taskStatusValues" [value]="taskStatus">
+                    {{ taskStatus }}
+                </option>
+            </select>
+        </form>
+        <button class="btn btn-secondary" type="submit" [disabled]="taskForm.pristine" (click)="updateTaskStatus()" id="updateTaskStatusButton">Atnaujinti</button>
+    </div>
+      
+    
+</div>

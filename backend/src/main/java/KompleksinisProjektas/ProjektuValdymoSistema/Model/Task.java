@@ -27,6 +27,7 @@ public class Task {
     private Date endDate;
     private TaskPriority taskPriority;
     private TaskStatus taskStatus;
+    private String taskFinishComment;
 
     @ManyToOne
     @JoinColumn(name = "owner_id")

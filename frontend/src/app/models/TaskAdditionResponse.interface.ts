@@ -1,4 +1,5 @@
 import { TaskPriority } from "./TaskPriority.enum";
+import { TaskStatus } from "./TaskStatus.enum";
 
 export interface TaskAdditionResponseInterface {
     id: number;
@@ -7,7 +8,8 @@ export interface TaskAdditionResponseInterface {
     filePath: string;
     startDate : string;
     endDate : string;
-    taskPriority: TaskPriority
+    taskPriority : TaskPriority;
+    taskStatus : TaskStatus;
     ownerId : number;
     projectId : number;
 }

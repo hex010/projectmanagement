@@ -1,9 +1,13 @@
 package KompleksinisProjektas.ProjektuValdymoSistema.Controller;
 
 import KompleksinisProjektas.ProjektuValdymoSistema.Exceptions.StorageSaveException;
+import KompleksinisProjektas.ProjektuValdymoSistema.Model.ProjectStatus;
+import KompleksinisProjektas.ProjektuValdymoSistema.Model.TaskStatus;
 import KompleksinisProjektas.ProjektuValdymoSistema.Service.TaskService;
+import KompleksinisProjektas.ProjektuValdymoSistema.dtos.ProjectDTO;
 import KompleksinisProjektas.ProjektuValdymoSistema.dtos.TaskDTO;
 import KompleksinisProjektas.ProjektuValdymoSistema.dtos.TaskFDTO;
+import KompleksinisProjektas.ProjektuValdymoSistema.dtos.TaskStatusUpdateFDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +29,12 @@ public class TaskController {
         return ResponseEntity.ok(addedTask);
     }
 
+    @GetMapping("/get/{taskId}")
+    public ResponseEntity<TaskDTO> getTask(@PathVariable int taskId) {
+        TaskDTO taskDTO = taskService.getTask(taskId);
+        return ResponseEntity.ok(taskDTO);
+    }
+
     @PostMapping("/uploadProjectDocument/{taskId}")
     public ResponseEntity<Void> addTaskDocument(@PathVariable int taskId, @RequestParam("taskFile") MultipartFile taskFile) {
         try {
@@ -39,5 +49,11 @@ public class TaskController {
     public ResponseEntity<List<TaskDTO>> getAssignedTasksOfProject(@PathVariable int projectId) {
         List<TaskDTO> tasks = taskService.getAssignedTasksOfProject(projectId);
         return ResponseEntity.ok(tasks);
+    }
+
+    @PutMapping("/updateStatus")
+    public ResponseEntity<TaskStatus> updateTaskStatus(@RequestBody TaskStatusUpdateFDTO taskStatusUpdateFDTO) {
+        TaskStatus taskStatus = taskService.updateTaskStatus(taskStatusUpdateFDTO);
+        return ResponseEntity.ok(taskStatus);
     }
 }

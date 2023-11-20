@@ -1,16 +1,10 @@
 package KompleksinisProjektas.ProjektuValdymoSistema.Service;
 
 import KompleksinisProjektas.ProjektuValdymoSistema.Exceptions.*;
-import KompleksinisProjektas.ProjektuValdymoSistema.Model.Project;
-import KompleksinisProjektas.ProjektuValdymoSistema.Model.ProjectStatus;
-import KompleksinisProjektas.ProjektuValdymoSistema.Model.Role;
-import KompleksinisProjektas.ProjektuValdymoSistema.Model.User;
+import KompleksinisProjektas.ProjektuValdymoSistema.Model.*;
 import KompleksinisProjektas.ProjektuValdymoSistema.Repository.ProjectRepository;
 import KompleksinisProjektas.ProjektuValdymoSistema.Repository.UserRepository;
-import KompleksinisProjektas.ProjektuValdymoSistema.dtos.ProjectCreationFDTO;
-import KompleksinisProjektas.ProjektuValdymoSistema.dtos.ProjectDTO;
-import KompleksinisProjektas.ProjektuValdymoSistema.dtos.ProjectTeamMembersDTO;
-import KompleksinisProjektas.ProjektuValdymoSistema.dtos.UserDTO;
+import KompleksinisProjektas.ProjektuValdymoSistema.dtos.*;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -127,5 +121,23 @@ public class ProjectService {
         }
 
         return assignedProjectsDTOs;
+    }
+
+    public ProjectStatus finishProject(ProjectFinishFDTO projectFinishFDTO) {
+        Project project = projectRepository.findById(projectFinishFDTO.getProjectId())
+                .orElseThrow(() -> new ProjectDoesNotExistException("Toks projektas neegzsituoja"));
+
+        if(project.getProjectStatus().equals(ProjectStatus.Finished))
+            throw new ProjectFinishException("Projektas jau yra užbaigtas.");
+
+        for(Task task : project.getTasks()) {
+            if(!task.getTaskStatus().equals(TaskStatus.Completed))
+                throw new ProjectFinishException("Ne visos projekto užduotys yra užbaigtos.");
+        }
+
+        project.setProjectStatus(ProjectStatus.Finished);
+        project.setProjectFinishComment(projectFinishFDTO.getProjectFinishComment());
+        project = projectRepository.save(project);
+        return project.getProjectStatus();
     }
 }

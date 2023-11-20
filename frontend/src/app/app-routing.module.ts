@@ -8,6 +8,8 @@ import { ProjectPageComponent } from './project-page/project-page.component';
 import { ErrorPageComponent } from './error-page/error-page.component';
 import { ProjectResolver } from './resolvers/project.resolver';
 import { AddUserComponent } from './add-user/add-user.component';
+import { ProjectTaskPageComponent } from './project-task-page/project-task-page.component';
+import { TaskResolver } from './resolvers/task.resolver';
 
 const routes: Routes = [
   {path: '', component:HomeComponent, canActivate: [AuthGuard]},
@@ -15,6 +17,7 @@ const routes: Routes = [
   {path: 'adduser', component:AddUserComponent, canActivate: [AuthGuard]},
   {path: 'project/create', component:CreateProjectComponent, canActivate: [AuthGuard]},
   {path: 'project/:id', component: ProjectPageComponent, canActivate: [AuthGuard], resolve: {project: ProjectResolver}},
+  {path: 'task/:id', component: ProjectTaskPageComponent, canActivate: [AuthGuard], resolve: {task: TaskResolver}},
   {path: '**', component:ErrorPageComponent}
 ];
 

@@ -1,15 +1,14 @@
 package KompleksinisProjektas.ProjektuValdymoSistema.Service;
 
 import KompleksinisProjektas.ProjektuValdymoSistema.Exceptions.*;
-import KompleksinisProjektas.ProjektuValdymoSistema.Model.Project;
-import KompleksinisProjektas.ProjektuValdymoSistema.Model.Role;
-import KompleksinisProjektas.ProjektuValdymoSistema.Model.Task;
-import KompleksinisProjektas.ProjektuValdymoSistema.Model.User;
+import KompleksinisProjektas.ProjektuValdymoSistema.Model.*;
 import KompleksinisProjektas.ProjektuValdymoSistema.Repository.ProjectRepository;
 import KompleksinisProjektas.ProjektuValdymoSistema.Repository.TaskRepository;
 import KompleksinisProjektas.ProjektuValdymoSistema.Repository.UserRepository;
+import KompleksinisProjektas.ProjektuValdymoSistema.dtos.ProjectDTO;
 import KompleksinisProjektas.ProjektuValdymoSistema.dtos.TaskDTO;
 import KompleksinisProjektas.ProjektuValdymoSistema.dtos.TaskFDTO;
+import KompleksinisProjektas.ProjektuValdymoSistema.dtos.TaskStatusUpdateFDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -90,16 +89,37 @@ public class TaskService {
 
         if(currentUser.getRole().equals(Role.Team_member)) {
             for (Task task : project.getTasks()) {
-                if (task.getTaskOwner().getId().equals(currentUser.getId())) {
+                if (task.getTaskOwner().getId().equals(currentUser.getId()) && !task.getTaskStatus().equals(TaskStatus.Completed)) {
                     myTasks.add(new TaskDTO(task));
                 }
             }
         } else {
             for (Task task : project.getTasks()) {
-                myTasks.add(new TaskDTO(task));
+                if(!task.getTaskStatus().equals(TaskStatus.Completed))
+                    myTasks.add(new TaskDTO(task));
             }
         }
 
         return myTasks;
+    }
+
+    public TaskDTO getTask(int taskId) {
+        Task task = taskRepository.findById(taskId).orElseThrow(() -> new TaskDoesNotExistException("Tokia projekto užduotis neegzsituoja"));
+        return new TaskDTO(task);
+    }
+
+    public TaskStatus updateTaskStatus(TaskStatusUpdateFDTO taskStatusUpdateFDTO) {
+        Task task = taskRepository.findById(taskStatusUpdateFDTO.getTaskId())
+                .orElseThrow(() -> new TaskDoesNotExistException("Tokia projekto užduotis neegzsituoja"));
+
+        task.setTaskStatus(taskStatusUpdateFDTO.getTaskStatus());
+
+        if(taskStatusUpdateFDTO.getTaskStatus() == TaskStatus.Completed) {
+            task.setTaskFinishComment(taskStatusUpdateFDTO.getTaskFinishComment());
+        }
+
+        task = taskRepository.save(task);
+
+        return task.getTaskStatus();
     }
 }

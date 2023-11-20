@@ -2,6 +2,7 @@ package KompleksinisProjektas.ProjektuValdymoSistema.dtos;
 
 import KompleksinisProjektas.ProjektuValdymoSistema.Model.Task;
 import KompleksinisProjektas.ProjektuValdymoSistema.Model.TaskPriority;
+import KompleksinisProjektas.ProjektuValdymoSistema.Model.TaskStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,6 +22,7 @@ public class TaskDTO {
     private Date startDate;
     private Date endDate;
     private TaskPriority taskPriority;
+    private TaskStatus taskStatus;
 
     private int ownerId;
     private int projectId;
@@ -33,6 +35,7 @@ public class TaskDTO {
         this.startDate = task.getStartDate();
         this.endDate = task.getEndDate();
         this.taskPriority = task.getTaskPriority();
+        this.taskStatus = task.getTaskStatus();
         this.ownerId = task.getTaskOwner().getId();
         this.projectId = task.getProject().getId();
     }

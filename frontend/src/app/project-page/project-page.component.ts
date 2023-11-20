@@ -10,6 +10,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserInterface } from '../models/User.interface';
 import { TaskAdditionResponseInterface } from '../models/TaskAdditionResponse.interface';
 import { TaskService } from '../services/task.service';
+import { ProjectStatus } from '../models/ProjectStatus.enum';
+import { ProjectFinishRequest } from '../models/ProjectFinishRequest.interface';
 
 @Component({
   selector: 'app-project-page',
@@ -91,7 +93,48 @@ export class ProjectPageComponent {
   }
 
   openTaskPage(taskID : number) {
-
+    this.router.navigate(['task', taskID]);
   }
-  
+
+  finishProject() {
+    this.dialogService.openProjectFinishDialog().afterClosed().pipe(first()).subscribe((projectFinishComment) => {
+      if(!projectFinishComment) {
+        this._snackBar.open("Projekto užbaigimas atšauktas", '', {
+          duration: 3000,
+        });
+      } else {
+        this.sendFinishProjectRequest(projectFinishComment);
+      }
+    });
+  }
+
+  private sendFinishProjectRequest(projectFinishComment : string) {
+    const projectFinishRequest: ProjectFinishRequest = {
+      projectId: this.project.id,
+      projectFinishComment: projectFinishComment
+    };
+
+    this.projectService.finishProject(projectFinishRequest).subscribe({
+      error: err => { 
+        if(err.error.message)
+          this._snackBar.open(err.error.message, '', {
+            duration: 3000,
+          });
+      },
+      next: response => {
+        const projectStatusResponse = response as unknown as keyof typeof ProjectStatus;
+        if(ProjectStatus[projectStatusResponse] === ProjectStatus.Finished) {
+          this._snackBar.open("Projektas sėkmingai užbaigtas.", '', {
+            duration: 3000,
+          });
+          this.router.navigate(['/']);
+        } else {
+          this._snackBar.open("Nenustatyta klaida. Projektas neužbaigtas.", '', {
+            duration: 3000,
+          });
+        }
+      },
+    });
+  }
+
 }

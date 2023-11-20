@@ -1,6 +1,8 @@
 <div *ngIf="isTeamLeaderRole()" class="page-header m-3 p-2">
     <h1>Projekto valdymo juosta</h1>
     <button class="btn btn-secondary" (click)="addTeamMembers()" id="addTeamMembersButton">Pridėti komandos narius (-į)</button>
+    <span class="button-spacing"></span>
+    <button class="btn btn-secondary" (click)="finishProject()" id="finishProjectButton">Užbaigti projektą</button>
 </div>
 
 <div *ngIf="isTeamLeaderRole()" class="team-members mx-3 p-2">

@@ -1,3 +1,4 @@
+import { ProjectStatus } from "./ProjectStatus.enum";
 import { UserInterface } from "./User.interface";
 
 export interface ProjectInterface {
@@ -7,5 +8,6 @@ export interface ProjectInterface {
     filePath: string;
     startDate : string;
     endDate : string;
+    projectStatus: ProjectStatus;
     teamMembers: UserInterface[];
 }
