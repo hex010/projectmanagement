@@ -10,6 +10,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UpdateTaskStatusRequest } from '../models/UpdateTaskStatusRequest.interface';
 import { DialogService } from '../services/dialog.service';
 import { first } from 'rxjs';
+import { TaskCommentInterface } from '../models/TaskComment.interface';
+import { SendTaskCommentRequestInterface } from '../models/SendTaskCommentRequest.interface';
 
 @Component({
   selector: 'app-project-task-page',
@@ -20,6 +22,11 @@ export class ProjectTaskPageComponent {
   public task!: TaskAdditionResponseInterface;
   public taskForm!: FormGroup;
   public taskStatusValues = Object.values(TaskStatus);
+
+  public taskCommentForm!: FormGroup;
+  public submittedCommentForm = false;
+  public taskComments: TaskCommentInterface[] = [];
+  public newReply: string = ''; 
 
   constructor(private route: ActivatedRoute, 
     private router: Router,
@@ -39,6 +46,16 @@ export class ProjectTaskPageComponent {
     this.taskForm = this.formBuilder.group({
       taskStatus: [this.task.taskStatus]
     });
+
+    this.taskCommentForm = this.formBuilder.group({
+      taskCommentDescription: ['', Validators.required]
+    });
+
+    this.taskService.getTaskComments(this.task.id).subscribe(
+      (data) => {
+        this.taskComments = data;
+      }
+    );
   }
 
   private convertToLithuaniaEnums() {
@@ -48,7 +65,7 @@ export class ProjectTaskPageComponent {
     this.task.taskPriority = TaskPriority[convertedPriority];
   }
 
-  updateTaskStatus() {
+  public updateTaskStatus() {
     if (this.taskForm.invalid) {
       return;
     }
@@ -78,7 +95,7 @@ export class ProjectTaskPageComponent {
   }
 
 
-  sendFinishTaskRequest(taskStatusData: UpdateTaskStatusRequest, selectedTaskStatus : string) {
+  private sendFinishTaskRequest(taskStatusData: UpdateTaskStatusRequest, selectedTaskStatus : string) {
     this.taskService.updateTaskStatus(taskStatusData).subscribe({
       error: err => { 
         if(err.error.message)
@@ -109,5 +126,89 @@ export class ProjectTaskPageComponent {
       },
     });
   }
+
+  public sendTaskComment() {
+    this.submittedCommentForm = true;
+
+    if (this.taskCommentForm.invalid) {
+      return;
+    }
+
+    const description = this.taskCommentForm.value.taskCommentDescription;
+
+    const commentData: SendTaskCommentRequestInterface = {
+      description: description,
+      taskId: this.task.id,
+      parentCommentId : -1
+    };
+
+    this.taskService.sendComment(commentData).subscribe({
+      error: err => { 
+        if(err.error.message)
+          this._snackBar.open(err.error.message, '', {
+            duration: 3000,
+          });
+      },
+      next: response => {
+        this.taskComments.push(response);
+        this._snackBar.open("Komentaras sėkmingai pridėtas", '', {
+          duration: 3000,
+        });
+        this.taskCommentForm.reset();
+        this.submittedCommentForm = false;
+      },
+    });
+  }
   
+  public replyToComment(comment : TaskCommentInterface) {
+    this.dialogService.openTaskCommentReplyDialog(comment).afterClosed().pipe(first()).subscribe((description) => {
+      if(!description) {
+        this._snackBar.open("Atsakymas į komentarą atšauktas", '', {
+          duration: 3000,
+        });
+      } else {
+        this.sendNewCommentReplyRequest(comment, description);
+      }
+    });
+  }
+
+  public getCommentsCount() : number {   
+    return this.getCommentsCountRecursively(this.taskComments);
+  }
+
+  private getCommentsCountRecursively(comments: TaskCommentInterface[]) : number {
+    let totalCount : number = 0
+
+    comments.forEach(comment => {
+      totalCount++;
+      if (comment.replies && comment.replies.length > 0) {
+        totalCount += this.getCommentsCountRecursively(comment.replies); // rekursyviai kitus atsakymus suskaiciuot
+      }
+    });
+
+    return totalCount;
+  }
+
+  public sendNewCommentReplyRequest(comment : TaskCommentInterface, description: string) {
+    const commentData: SendTaskCommentRequestInterface = {
+      description: description,
+      taskId: this.task.id,
+      parentCommentId : comment.id
+    };
+
+    this.taskService.sendComment(commentData).subscribe({
+      error: err => { 
+        if(err.error.message)
+          this._snackBar.open(err.error.message, '', {
+            duration: 3000,
+          });
+      },
+      next: response => {
+        comment.replies.push(response);
+        this._snackBar.open("Komentaras sėkmingai pridėtas", '', {
+          duration: 3000,
+        });
+      },
+    });
+  }
 }

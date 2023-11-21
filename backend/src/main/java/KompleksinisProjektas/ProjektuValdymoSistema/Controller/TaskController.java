@@ -4,10 +4,7 @@ import KompleksinisProjektas.ProjektuValdymoSistema.Exceptions.StorageSaveExcept
 import KompleksinisProjektas.ProjektuValdymoSistema.Model.ProjectStatus;
 import KompleksinisProjektas.ProjektuValdymoSistema.Model.TaskStatus;
 import KompleksinisProjektas.ProjektuValdymoSistema.Service.TaskService;
-import KompleksinisProjektas.ProjektuValdymoSistema.dtos.ProjectDTO;
-import KompleksinisProjektas.ProjektuValdymoSistema.dtos.TaskDTO;
-import KompleksinisProjektas.ProjektuValdymoSistema.dtos.TaskFDTO;
-import KompleksinisProjektas.ProjektuValdymoSistema.dtos.TaskStatusUpdateFDTO;
+import KompleksinisProjektas.ProjektuValdymoSistema.dtos.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -55,5 +52,17 @@ public class TaskController {
     public ResponseEntity<TaskStatus> updateTaskStatus(@RequestBody TaskStatusUpdateFDTO taskStatusUpdateFDTO) {
         TaskStatus taskStatus = taskService.updateTaskStatus(taskStatusUpdateFDTO);
         return ResponseEntity.ok(taskStatus);
+    }
+
+    @PostMapping("/comment")
+    public ResponseEntity<TaskCommentDTO> addTaskComment(@RequestBody TaskCommentRequestFDTO taskCommentRequestFDTO) {
+        TaskCommentDTO taskCommentDTO = taskService.addTaskComment(taskCommentRequestFDTO);
+        return ResponseEntity.ok(taskCommentDTO);
+    }
+
+    @GetMapping("/get/comments/{taskId}")
+    public ResponseEntity<List<TaskCommentDTO>> getTaskComments(@PathVariable int taskId) {
+        List<TaskCommentDTO> taskCommentDTOs = taskService.getTaskComments(taskId);
+        return ResponseEntity.ok(taskCommentDTOs);
     }
 }

@@ -5,6 +5,8 @@ import { UserInterface } from "../models/User.interface";
 import { ProjectTasksAdditionDialogComponent } from "../project-tasks-addition-dialog/project-tasks-addition-dialog.component";
 import { ProjectFinishDialogComponent } from "../project-finish-dialog/project-finish-dialog.component";
 import { TaskFinishDialogComponent } from "../task-finish-dialog/task-finish-dialog.component";
+import { TaskCommentReplyDialogComponent } from "../task-comment-reply-dialog/task-comment-reply-dialog.component";
+import { TaskCommentInterface } from "../models/TaskComment.interface";
 
 @Injectable()
 export class DialogService {
@@ -39,6 +41,13 @@ export class DialogService {
     openTaskFinishDialog() : MatDialogRef<TaskFinishDialogComponent> {
         return this.dialog.open(TaskFinishDialogComponent, {
             width: '500px'
+        });
+    }
+
+    openTaskCommentReplyDialog(comment : TaskCommentInterface) : MatDialogRef<TaskCommentReplyDialogComponent> {
+        return this.dialog.open(TaskCommentReplyDialogComponent, {
+            width: '500px',
+            data: comment
         });
     }
 }

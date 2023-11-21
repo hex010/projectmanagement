@@ -6,6 +6,8 @@ import { TaskPriority } from "../models/TaskPriority.enum";
 import { Observable } from "rxjs";
 import { TaskStatus } from "../models/TaskStatus.enum";
 import { UpdateTaskStatusRequest } from "../models/UpdateTaskStatusRequest.interface";
+import { SendTaskCommentRequestInterface } from "../models/SendTaskCommentRequest.interface";
+import { TaskCommentInterface } from "../models/TaskComment.interface";
 
 @Injectable()
 export class TaskService {
@@ -14,6 +16,8 @@ export class TaskService {
     private assignedTasksURL = "http://localhost:8080/ProjektuValdymoSistema/api/v1/task/get/assigned";
     private getTaskURL = "http://localhost:8080/ProjektuValdymoSistema/api/v1/task/get";
     private updateTaskStatusURL = "http://localhost:8080/ProjektuValdymoSistema/api/v1/task/updateStatus";
+    private sendTaskCommentURL = "http://localhost:8080/ProjektuValdymoSistema/api/v1/task/comment";
+    private getTaskCommentsURL = "http://localhost:8080/ProjektuValdymoSistema/api/v1/task/get/comments";
 
     constructor(private http: HttpClient) {}
 
@@ -51,5 +55,13 @@ export class TaskService {
 
     updateTaskStatus(taskStatusData: UpdateTaskStatusRequest) {
         return this.http.put<TaskStatus>(this.updateTaskStatusURL, taskStatusData);
+    }
+
+    sendComment(commentData: SendTaskCommentRequestInterface) {
+        return this.http.post<TaskCommentInterface>(this.sendTaskCommentURL, commentData); 
+    }
+
+    getTaskComments(taskId: number) : Observable<TaskCommentInterface[]> {
+        return this.http.get<TaskCommentInterface[]>(`${this.getTaskCommentsURL}/${taskId}`);
     }
 }

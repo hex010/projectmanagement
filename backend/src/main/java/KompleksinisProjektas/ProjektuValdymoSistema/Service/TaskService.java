@@ -3,12 +3,10 @@ package KompleksinisProjektas.ProjektuValdymoSistema.Service;
 import KompleksinisProjektas.ProjektuValdymoSistema.Exceptions.*;
 import KompleksinisProjektas.ProjektuValdymoSistema.Model.*;
 import KompleksinisProjektas.ProjektuValdymoSistema.Repository.ProjectRepository;
+import KompleksinisProjektas.ProjektuValdymoSistema.Repository.TaskCommentRepository;
 import KompleksinisProjektas.ProjektuValdymoSistema.Repository.TaskRepository;
 import KompleksinisProjektas.ProjektuValdymoSistema.Repository.UserRepository;
-import KompleksinisProjektas.ProjektuValdymoSistema.dtos.ProjectDTO;
-import KompleksinisProjektas.ProjektuValdymoSistema.dtos.TaskDTO;
-import KompleksinisProjektas.ProjektuValdymoSistema.dtos.TaskFDTO;
-import KompleksinisProjektas.ProjektuValdymoSistema.dtos.TaskStatusUpdateFDTO;
+import KompleksinisProjektas.ProjektuValdymoSistema.dtos.*;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -20,6 +18,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @AllArgsConstructor
@@ -31,6 +30,7 @@ public class TaskService {
     private final TaskRepository taskRepository;
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
+    private final TaskCommentRepository taskCommentRepository;
 
     public TaskDTO addTaskToProject(TaskFDTO taskFDTO) {
         Project project = projectRepository.findById(taskFDTO.getProjectId())
@@ -122,4 +122,65 @@ public class TaskService {
 
         return task.getTaskStatus();
     }
+
+    public TaskCommentDTO addTaskComment(TaskCommentRequestFDTO taskCommentRequestFDTO) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = (String) authentication.getPrincipal();
+        User currentUser = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserDoesNotExistException("Naudotojas su paštu: " + email + " neegzistuoja"));
+
+        Task task = taskRepository.findById(taskCommentRequestFDTO.getTaskId())
+                .orElseThrow(() -> new TaskDoesNotExistException("Tokia projekto užduotis neegzsituoja"));
+
+        TaskComment newTaskComment = new TaskComment(taskCommentRequestFDTO.getDescription(), task, currentUser);
+
+        if(taskCommentRequestFDTO.getParentCommentId() != -1) {
+            TaskComment parentComment = taskCommentRepository.findById(taskCommentRequestFDTO.getParentCommentId())
+                    .orElseThrow(() -> new CommentNotFoundException("Tokio komentaro neegzistuoja"));
+
+            newTaskComment.setParentComment(parentComment);
+        }
+
+        newTaskComment = taskCommentRepository.save(newTaskComment);
+
+        return new TaskCommentDTO(newTaskComment.getId(), taskCommentRequestFDTO.getDescription(), task.getId(), currentUser.getFirstname() + " " + currentUser.getLastname(), Collections.emptyList());
+    }
+
+    public List<TaskCommentDTO> getTaskComments(int taskId) {
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new TaskDoesNotExistException("Tokia projekto užduotis neegzsituoja"));
+
+        List<TaskCommentDTO> taskCommentDTOS = new ArrayList<>();
+
+        for (TaskComment taskComment : task.getCommets()) {
+            if (taskComment.getParentComment() == null) {
+                List<TaskCommentDTO> commentTree = buildCommentTree(taskComment);
+                taskCommentDTOS.addAll(commentTree);
+            }
+        }
+
+        return taskCommentDTOS;
+    }
+
+    private List<TaskCommentDTO> buildCommentTree(TaskComment taskComment) {
+        List<TaskCommentDTO> commentTree = new ArrayList<>();
+        List<TaskCommentDTO> replies = new ArrayList<>();
+
+        for (TaskComment taskCommentReply : taskComment.getReplies()) {
+            // rekursyviai isgauna visus atsakymus i atsakymus
+            List<TaskCommentDTO> replyTree = buildCommentTree(taskCommentReply);
+            replies.addAll(replyTree);
+        }
+
+        commentTree.add(new TaskCommentDTO(
+                taskComment.getId(),
+                taskComment.getDescription(),
+                taskComment.getTask().getId(),
+                taskComment.getUser().getFirstname() + " " + taskComment.getUser().getLastname(),
+                replies
+        ));
+
+        return commentTree;
+    }
+
 }

@@ -22,7 +22,7 @@ public class ExceptionHandlerAdvice {
         return new ResponseEntity<>(body, HttpStatus.FORBIDDEN);
     }
 
-    @ExceptionHandler({ProjectDoesNotExistException.class, TaskDoesNotExistException.class})
+    @ExceptionHandler({ProjectDoesNotExistException.class, TaskDoesNotExistException.class, CommentNotFoundException.class})
     public ResponseEntity<Map<String, Object>> handleNotFoundExceptions(RuntimeException ex) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", LocalDateTime.now());

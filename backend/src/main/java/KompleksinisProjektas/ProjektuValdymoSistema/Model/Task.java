@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 @Builder
 @Data
@@ -36,6 +37,9 @@ public class Task {
     @ManyToOne
     @JoinColumn(name = "project_id")
     private Project project;
+
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<TaskComment> commets;
 
     public Task(TaskFDTO taskFDTO, Project project, User foundUser) {
         this.name = taskFDTO.getName();

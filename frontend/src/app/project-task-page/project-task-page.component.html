@@ -15,11 +15,11 @@
     </div>
 
     <div class="taskDescription mt-2">
-        <h1 class="d-inline">Užtuoties atlikimo prioritetas: </h1>
+        <h1 class="d-inline">Užduoties atlikimo prioritetas: </h1>
         <h2 class="d-inline"><b>{{task.taskPriority}}</b></h2>
     </div>
 
-    <h1 class="mt-2 mb-1 mr-2">Užtuoties atlikimo statusas:</h1>
+    <h1 class="mt-2 mb-1">Užduoties atlikimo statusas:</h1>
     <div class="d-flex">
         <form [formGroup]="taskForm" style="margin-right: 10px;" class="flex-grow-1">
             <select class="form-control" formControlName="taskStatus">
@@ -30,6 +30,33 @@
         </form>
         <button class="btn btn-secondary" type="submit" [disabled]="taskForm.pristine" (click)="updateTaskStatus()" id="updateTaskStatusButton">Atnaujinti</button>
     </div>
-      
+    
+    <h1 class="mt-4 mb-1">Užduoti klausimą projekto vadovui:</h1>
+    <form [formGroup]="taskCommentForm">
+        <textarea class="form-control" formControlName="taskCommentDescription" placeholder="Pateikite komentarą" required="required"></textarea>
+        <div *ngIf="submittedCommentForm && taskCommentForm.controls['taskCommentDescription'].errors" class="text-danger">
+            <p id="descriptionRequiredError" *ngIf="taskCommentForm.get('taskCommentDescription')?.hasError('required')">Komentaras negali būti tuščias.</p>
+        </div>
+    </form>
+    <button class="btn btn-secondary mt-2" type="submit" (click)="sendTaskComment()" id="sendTaskCommentButton">Siųsti komentarą</button>
+
+    <h1 class="mt-4 mb-1">Visi komentarai ({{getCommentsCount()}}):</h1>
+
+    <mat-card *ngFor="let comment of taskComments" class="my-2">
+        <mat-card-header>
+            <mat-card-title id="taskCommentOwnerFullNameLabel">{{comment.ownerFullName}}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content style="overflow-wrap: break-word; word-wrap: break-word;">
+            <p id="taskCommentDescriptionLabel">{{comment.description}}</p>
+        </mat-card-content>
+        <mat-card-actions>
+            <button mat-button (click)="replyToComment(comment)" id="replyToCommentButton">Atsakyti</button>
+        </mat-card-actions>
+    
+        <div *ngIf="comment.replies && comment.replies.length > 0">
+            <app-task-comment [comments]="comment.replies"></app-task-comment>
+        </div>
+
+    </mat-card>
     
 </div>

@@ -33,6 +33,8 @@ import { ProjectTaskPageComponent } from './project-task-page/project-task-page.
 import { TaskResolver } from './resolvers/task.resolver';
 import { ProjectFinishDialogComponent } from './project-finish-dialog/project-finish-dialog.component';
 import { TaskFinishDialogComponent } from './task-finish-dialog/task-finish-dialog.component';
+import { TaskCommentComponent } from './task-comment/task-comment.component';
+import { TaskCommentReplyDialogComponent } from './task-comment-reply-dialog/task-comment-reply-dialog.component';
 
 @NgModule({
   declarations: [
@@ -46,9 +48,11 @@ import { TaskFinishDialogComponent } from './task-finish-dialog/task-finish-dial
     ProjectTeamMembersSelectionDialogComponent,
     AddUserComponent,
     ProjectTasksAdditionDialogComponent,
+    TaskCommentReplyDialogComponent,
     ProjectTaskPageComponent,
     ProjectFinishDialogComponent,
-    TaskFinishDialogComponent
+    TaskFinishDialogComponent,
+    TaskCommentComponent
   ],
   imports: [
     BrowserModule,
