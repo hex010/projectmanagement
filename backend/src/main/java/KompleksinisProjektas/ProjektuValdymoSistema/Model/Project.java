@@ -52,5 +52,6 @@ public class Project {
         this.startDate = projectCreationFDTO.getStartDate();
         this.endDate = projectCreationFDTO.getEndDate();
         this.teamLeader = teamLeader;
+        this.projectStatus = ProjectStatus.InProgress;
     }
 }
