@@ -17,7 +17,6 @@
     margin-left: 15px;
 }
 
-
 .assignedTasks {
     display: flex;
     flex-wrap: wrap;
@@ -29,3 +28,11 @@
     width: 100%;
 }
 
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+.timeAlert {
+    animation: blink 1s step-end infinite;
+}

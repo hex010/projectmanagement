@@ -12,4 +12,5 @@ export interface TaskAdditionResponseInterface {
     taskStatus : TaskStatus;
     ownerId : number;
     projectId : number;
+    warned : boolean;
 }

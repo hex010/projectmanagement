@@ -65,9 +65,9 @@ public class TaskController {
         return ResponseEntity.ok(taskCommentDTOs);
     }
 
-    @PostMapping("/generate")
-    public ResponseEntity<Void> generateComments() {
-        taskService.generateCommentsWithReplies();
-        return ResponseEntity.ok().build();
+    @PostMapping("/warn")
+    public ResponseEntity<Boolean> warnTeamMember(@RequestBody int taskId) {
+        boolean succeed = taskService.warnTeamMember(taskId);
+        return ResponseEntity.ok(succeed);
     }
 }

@@ -18,6 +18,7 @@ export class TaskService {
     private updateTaskStatusURL = "http://localhost:8080/ProjektuValdymoSistema/api/v1/task/updateStatus";
     private sendTaskCommentURL = "http://localhost:8080/ProjektuValdymoSistema/api/v1/task/comment";
     private getTaskCommentsURL = "http://localhost:8080/ProjektuValdymoSistema/api/v1/task/get/comments";
+    private sendAWarningToTeamMemberURL = "http://localhost:8080/ProjektuValdymoSistema/api/v1/task/warn";
 
     constructor(private http: HttpClient) {}
 
@@ -63,5 +64,9 @@ export class TaskService {
 
     getTaskComments(taskId: number) : Observable<TaskCommentInterface[]> {
         return this.http.get<TaskCommentInterface[]>(`${this.getTaskCommentsURL}/${taskId}`);
+    }
+
+    sendWarningToTeamMember(taskId: number) {
+        return this.http.post<boolean>(this.sendAWarningToTeamMemberURL, taskId); 
     }
 }

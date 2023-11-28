@@ -32,31 +32,6 @@ public class TaskService {
     private final UserRepository userRepository;
     private final TaskCommentRepository taskCommentRepository;
 
-
-    public void generateCommentsWithReplies() {
-        Task task = taskRepository.findById(3).orElse(null); // Assuming task with id 3 exists
-        User user = userRepository.findById(3).orElse(null); // Assuming user with id 3 exists
-
-        for (int i = 0; i <= 20; i++) {
-            TaskComment comment = new TaskComment("Comment " + (i+1), task, user);
-            comment.setReplies(generateReplies(comment, 1, 4));
-            taskCommentRepository.save(comment);
-        }
-    }
-
-    private List<TaskComment> generateReplies(TaskComment parentComment, int minReplies, int maxReplies) {
-        List<TaskComment> replies = new ArrayList<>();
-        int numReplies = (int) (Math.random() * (maxReplies - minReplies + 1) + minReplies);
-
-        for (int i = 0; i < numReplies; i++) {
-            TaskComment reply = new TaskComment("Reply " + (i+1), parentComment.getTask(), parentComment.getUser());
-            reply.setParentComment(parentComment);
-            replies.add(reply);
-        }
-
-        return replies;
-    }
-
     public TaskDTO addTaskToProject(TaskFDTO taskFDTO) {
         Project project = projectRepository.findById(taskFDTO.getProjectId())
                 .orElseThrow(() -> new ProjectDoesNotExistException("Toks projektas neegzsituoja"));
@@ -208,4 +183,12 @@ public class TaskService {
         return commentTree;
     }
 
+    public boolean warnTeamMember(int taskId) {
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new TaskDoesNotExistException("Tokia projekto užduotis neegzsituoja"));
+
+        task.setWarned(true);
+
+        return taskRepository.save(task).isWarned();
+    }
 }

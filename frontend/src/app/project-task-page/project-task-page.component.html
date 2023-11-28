@@ -1,4 +1,9 @@
 <div class="container">
+
+    <div *ngIf="isTeamLeaderRole()" class="warnTeamMember mb-2">
+        <button mat-raised-button color="warn" (click)="warnTeamMember()" id="warnTeamMemberButton">Įspėti dėl laiko</button>
+    </div>
+
     <div class="taskName">
         <h1 class="d-inline">Pavadinimas: </h1> 
         <h2 class="d-inline"><b>{{task.name}}</b></h2>

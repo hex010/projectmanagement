@@ -28,6 +28,7 @@
         <mat-card-header>
             <mat-card-title>{{task.name}}</mat-card-title>
             <mat-card-subtitle>{{ task.description }}</mat-card-subtitle>
+            <img *ngIf="task.warned" mat-card-image src="assets/images/clock-alert.png" alt="Laiko įspėjimo nuotrauka" width="32" height="32" [ngClass]="'timeAlert'">
           </mat-card-header>
           <mat-card-actions>
             <button mat-button (click)="openTaskPage(task.id)" id="openTaskPageButton">Peržiūrėti</button>

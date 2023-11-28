@@ -12,6 +12,7 @@ import { DialogService } from '../services/dialog.service';
 import { first } from 'rxjs';
 import { TaskCommentInterface } from '../models/TaskComment.interface';
 import { SendTaskCommentRequestInterface } from '../models/SendTaskCommentRequest.interface';
+import { Role } from '../models/Role.enum';
 
 @Component({
   selector: 'app-project-task-page',
@@ -56,6 +57,10 @@ export class ProjectTaskPageComponent {
         this.taskComments = data;
       }
     );
+  }
+
+  isTeamLeaderRole() : boolean {
+    return this._auth.getRole() === Role.KOMANDOS_VADOVAS.toString();
   }
 
   private convertToLithuaniaEnums() {
@@ -206,6 +211,22 @@ export class ProjectTaskPageComponent {
       next: response => {
         comment.replies.push(response);
         this._snackBar.open("Komentaras sėkmingai pridėtas", '', {
+          duration: 3000,
+        });
+      },
+    });
+  }
+
+  warnTeamMember() {
+    this.taskService.sendWarningToTeamMember(this.task.id).subscribe({
+      error: err => { 
+        if(err.error.message)
+          this._snackBar.open(err.error.message, '', {
+            duration: 3000,
+          });
+      },
+      next: response => {
+        this._snackBar.open("Komandos narys sėkmingai įspėtas.", '', {
           duration: 3000,
         });
       },

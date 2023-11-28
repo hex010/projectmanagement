@@ -23,6 +23,7 @@ public class TaskDTO {
     private Date endDate;
     private TaskPriority taskPriority;
     private TaskStatus taskStatus;
+    private boolean warned;
 
     private int ownerId;
     private int projectId;
@@ -38,5 +39,6 @@ public class TaskDTO {
         this.taskStatus = task.getTaskStatus();
         this.ownerId = task.getTaskOwner().getId();
         this.projectId = task.getProject().getId();
+        this.warned = task.isWarned();
     }
 }
