@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,7 +47,7 @@ public class ProjectService {
         return new ProjectDTO(project);
     }
 
-    public ProjectTeamMembersDTO addUsersToProjectTeam(int projectId, List<Integer> userIds) {
+    public List<UserDTO> addUsersToProjectTeam(int projectId, List<Integer> userIds) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new ProjectDoesNotExistException("Toks projektas neegzsituoja"));
 
@@ -70,12 +71,10 @@ public class ProjectService {
 
         project = projectRepository.save(project);
 
-        List<UserDTO> teamMembersDTO = project.getTeamMembers()
+        return project.getTeamMembers()
                 .stream()
-                .map(user -> new UserDTO(user))
-                .collect(Collectors.toList());
-
-        return new ProjectTeamMembersDTO(project.getId(), teamMembersDTO);
+                .map(UserDTO::new)
+                .toList();
     }
 
     public void addProjectDocument(int projectId, MultipartFile projectFile) throws IOException {
@@ -222,7 +221,44 @@ public class ProjectService {
 
         project.setProjectStatus(ProjectStatus.Finished);
         project.setProjectFinishComment(projectFinishFDTO.getProjectFinishComment());
+        project.setFinishDate(new Date());
         project = projectRepository.save(project);
         return project.getProjectStatus();
+    }
+
+    public ProjectTasksStatisticsDTO getProjectStatistics(int projectId) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ProjectDoesNotExistException("Toks projektas neegzsituoja"));
+
+        ProjectTasksStatisticsDTO projectTasksStatisticsDTO = new ProjectTasksStatisticsDTO();
+        int activeTasks = 0;
+        int finishedTasks = 0;
+        int lateTasks = 0;
+        int earlierDoneTasks = 0;
+
+        for(Task task : project.getTasks()) {
+            if(task.getTaskStatus() == TaskStatus.Completed)
+                finishedTasks++;
+            else
+                activeTasks++;
+
+            if(task.getFinishDate() != null && task.getEndDate() != null) {
+                long timeDifference = task.getFinishDate().getTime() - task.getEndDate().getTime();
+                int daysLate = (int) Math.ceil(timeDifference / (1000.0 * 3600 * 24));
+                if (daysLate > 0) lateTasks++;
+
+                timeDifference = task.getEndDate().getTime() - task.getFinishDate().getTime();
+                int daysEarlier = (int) Math.ceil(timeDifference / (1000.0 * 3600 * 24));
+                if (daysEarlier > 0) earlierDoneTasks++;
+            }
+        }
+
+        projectTasksStatisticsDTO.setActiveTasks(activeTasks);
+        projectTasksStatisticsDTO.setAllTasks(project.getTasks().size());
+        projectTasksStatisticsDTO.setFinishedTasks(finishedTasks);
+        projectTasksStatisticsDTO.setLateTasks(lateTasks);
+        projectTasksStatisticsDTO.setEarlierDoneTasks(earlierDoneTasks);
+
+        return projectTasksStatisticsDTO;
     }
 }

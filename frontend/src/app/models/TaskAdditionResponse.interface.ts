@@ -8,9 +8,12 @@ export interface TaskAdditionResponseInterface {
     filePath: string;
     startDate : string;
     endDate : string;
+    inProgressDate : string;
+    finishDate : string;
     taskPriority : TaskPriority;
     taskStatus : TaskStatus;
     ownerId : number;
     projectId : number;
     warned : boolean;
+    taskFinishComment : string;
 }

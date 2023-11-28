@@ -26,6 +26,8 @@ public class ProjectDTO {
     private List<UserDTO> teamMembers;
     private ProjectStatus projectStatus;
     private UserDTO teamLeader;
+    private Date finishDate;
+    private String projectFinishComment;
 
     public ProjectDTO(Project project) {
         this.id = project.getId();
@@ -41,5 +43,7 @@ public class ProjectDTO {
                         .collect(Collectors.toList()) :
                 Collections.emptyList();
         this.teamLeader = new UserDTO(project.getTeamLeader());
+        this.finishDate = project.getFinishDate();
+        this.projectFinishComment = project.getProjectFinishComment();
     }
 }

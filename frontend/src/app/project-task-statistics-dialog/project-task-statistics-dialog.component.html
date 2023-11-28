@@ -1,0 +1,55 @@
+<div *ngIf="task" class="mx-3 p-2">
+    <div class="statistics-heading mb-2">
+        <h1 class="m-0" id="projectTeamMembersLabel">Projekto užduoties statistika</h1>
+    </div>
+
+    <div class="taskStartDate">
+        <h2 class="d-inline">Užduoties pradžios data: </h2> 
+        <h3 class="d-inline"><b>{{task.startDate | date:'yyyy-MM-dd'}}</b></h3>
+    </div>
+
+    <div class="taskEndDate">
+        <h2 class="d-inline">Numatoma užduoties pabaigos data: </h2> 
+        <h3 class="d-inline"><b>{{task.endDate | date:'yyyy-MM-dd'}}</b></h3>
+    </div>
+
+    <div class="taskFinishedComment">
+        <h2 class="d-inline">Užduotį pradėjo vykdyti: </h2> 
+        <h3 class="d-inline"><b>{{getInProgressDate() | date:'yyyy-MM-dd'}}</b></h3>
+    </div>
+
+    <div class="taskFinishedComment">
+        <h2 class="d-inline">Užduotį užbaigė: </h2> 
+        <h3 class="d-inline"><b>{{getFinishDate() | date:'yyyy-MM-dd'}}</b></h3>
+    </div>
+
+    <div *ngIf="!isTaskFinished()" class="taskNotFinished">
+        <h2 class="d-inline">Užduotis vykdoma: </h2> 
+        <h3 class="d-inline"><b>{{calculateIngoingTaskDate()}} dienų</b></h3>
+    </div>
+
+    <div *ngIf="isTaskFinished()" class="taskFinishedDays">
+        <h2 class="d-inline">Užduotis baigta prieš: </h2> 
+        <h3 class="d-inline"><b>{{calculateFinishedTaskDate()}} dienų</b></h3>
+    </div>
+
+    <div *ngIf="isTaskFinished()" class="taskFinished">
+        <h2 class="d-inline">Užduotis buvo vykdoma: </h2> 
+        <h3 class="d-inline"><b>{{calculateFinishedTaskDuration()}} dienų</b></h3>
+    </div>
+
+    <div *ngIf="isTaskFinished()" class="taskFinishedLate">
+        <h2 class="d-inline">Užduotis buvo vėluota: </h2> 
+        <h3 class="d-inline"><b>{{calculateFinishedTaskLateDate()}} dienų</b></h3>
+    </div>
+
+    <div *ngIf="isTaskFinished()" class="taskFinishedEarlier">
+        <h2 class="d-inline">Užduotis buvo baigta anksčiau: </h2> 
+        <h3 class="d-inline"><b>{{calculateFinishedTaskEarlierDate()}} dienom</b></h3>
+    </div>
+
+    <div *ngIf="isTaskFinished()" class="taskFinishedComment">
+        <h2 class="d-inline">Užduoties užbaigimo komentaras: </h2> 
+        <h3 class="d-inline"><b>{{getFinishedTaskComment()}}</b></h3>
+    </div>
+</div>

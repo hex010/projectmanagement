@@ -9,6 +9,7 @@ import { TaskCommentReplyDialogComponent } from "../task-comment-reply-dialog/ta
 import { TaskCommentInterface } from "../models/TaskComment.interface";
 import { EditUserDialogComponent } from "../edit-user-dialog/edit-user-dialog.component";
 import { EditUserInterface } from "../models/EditUser.interface";
+import { ProjectTaskStatisticsDialogComponent } from "../project-task-statistics-dialog/project-task-statistics-dialog.component";
 
 @Injectable()
 export class DialogService {
@@ -57,6 +58,13 @@ export class DialogService {
         return this.dialog.open(EditUserDialogComponent, {
             width: '500px',
             data: user
+        });
+    }
+
+    openProjectTaskStatistics(taskId : number): MatDialogRef<ProjectTaskStatisticsDialogComponent> {
+        return this.dialog.open(ProjectTaskStatisticsDialogComponent, {
+            width: '500px',
+            data: taskId
         });
     }
 }

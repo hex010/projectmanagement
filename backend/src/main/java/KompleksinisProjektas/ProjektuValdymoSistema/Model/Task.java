@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -24,12 +25,16 @@ public class Task {
     private String name;
     private String description;
     private String filePath;
-    private Date startDate;
-    private Date endDate;
     private TaskPriority taskPriority;
     private TaskStatus taskStatus;
+    private Date startDate;
+    private Date endDate;
     private String taskFinishComment;
     private boolean warned;
+
+    //statistikos
+    private Date inProgressDate;
+    private Date finishDate;
 
     @ManyToOne
     @JoinColumn(name = "owner_id")
@@ -45,9 +50,9 @@ public class Task {
     public Task(TaskFDTO taskFDTO, Project project, User foundUser) {
         this.name = taskFDTO.getName();
         this.description = taskFDTO.getDescription();
+        this.taskPriority = taskFDTO.getTaskPriority();
         this.startDate = taskFDTO.getStartDate();
         this.endDate = taskFDTO.getEndDate();
-        this.taskPriority = taskFDTO.getTaskPriority();
         this.taskOwner = foundUser;
         this.project = project;
         this.taskStatus = TaskStatus.New;

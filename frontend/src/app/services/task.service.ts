@@ -50,7 +50,7 @@ export class TaskService {
         return key;
     }
     
-    getAssignedProjects(projectID : number): Observable<TaskAdditionResponseInterface[]> {
+    getAssignedTasks(projectID : number): Observable<TaskAdditionResponseInterface[]> {
         return this.http.get<TaskAdditionResponseInterface[]>(`${this.assignedTasksURL}/${projectID}`);
     }
 

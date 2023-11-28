@@ -7,11 +7,13 @@ import { DialogService } from '../services/dialog.service';
 import { first } from 'rxjs';
 import { ProjectService } from '../services/project.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { UserInterface } from '../models/User.interface';
 import { TaskAdditionResponseInterface } from '../models/TaskAdditionResponse.interface';
 import { TaskService } from '../services/task.service';
 import { ProjectStatus } from '../models/ProjectStatus.enum';
 import { ProjectFinishRequest } from '../models/ProjectFinishRequest.interface';
+import { ProjectTasksStatistics } from '../models/ProjectTasksStatistics.interface';
+import { TaskStatus } from '../models/TaskStatus.enum';
+import { UserInterface } from '../models/User.interface';
 
 @Component({
   selector: 'app-project-page',
@@ -21,6 +23,7 @@ import { ProjectFinishRequest } from '../models/ProjectFinishRequest.interface';
 export class ProjectPageComponent {
   public project!: ProjectInterface;
   public assignedTasks: TaskAdditionResponseInterface[] = [];
+  public projectTaskStatistics!: ProjectTasksStatistics;
 
   constructor(private route: ActivatedRoute, 
     private router: Router, 
@@ -35,9 +38,15 @@ export class ProjectPageComponent {
       this.project = data['project'];
     })
 
-    this.taskService.getAssignedProjects(this.project.id).subscribe(
+    this.taskService.getAssignedTasks(this.project.id).subscribe(
       (data) => {
         this.assignedTasks = data;
+      }
+    );
+
+    this.projectService.getProjectTasksStatistics(this.project.id).subscribe(
+      (data) => {
+        this.projectTaskStatistics = data;
       }
     );
   }
@@ -54,16 +63,23 @@ export class ProjectPageComponent {
     return this._auth.getRole() === Role.KOMANDOS_NARYS.toString();
   }
 
+  public convertTaskStatusToLithuaniaEnum(task : TaskAdditionResponseInterface) {
+    const convertedStatus = task.taskStatus as unknown as keyof typeof TaskStatus;
+    return TaskStatus[convertedStatus];
+  }
+
   addTasksToTeamMember(userID : number) {
     const userFound = this.project.teamMembers.find(user => user.id === userID);
 
     if(!userFound) return;
 
-    this.dialogService.openProjectTasksAdditionDialog(this.project.id, userFound).afterClosed().pipe(first()).subscribe((succeed) => {
-      if(!succeed) {
+    this.dialogService.openProjectTasksAdditionDialog(this.project.id, userFound).afterClosed().pipe(first()).subscribe((newTask) => {
+      if(!newTask) {
         this._snackBar.open("Užduoties pridėjimas atšauktas", '', {
           duration: 3000,
         });
+      } else {
+        this.assignedTasks.push(newTask);
       }
     });
   }
@@ -82,6 +98,7 @@ export class ProjectPageComponent {
             this._snackBar.open("Sėkmingai pridėta", '', {
               duration: 3000,
             });
+            this.project.teamMembers.splice(0, this.project.teamMembers.length, ...response);
           },
         });
       } else {
@@ -137,4 +154,94 @@ export class ProjectPageComponent {
     });
   }
 
+  isProjectFinished() : boolean{
+    return this.project.projectStatus === this.projectService.getProjectStatusKeyByValue(ProjectStatus.Finished);
+  }
+
+  calculateIngoingProjectDate() : number {
+    const startDateObj = new Date(this.project.startDate);
+    const currentDate = new Date();
+
+    const timeDifference = currentDate.getTime() - startDateObj.getTime();
+    return Math.ceil(timeDifference / (1000 * 3600 * 24));
+  }
+
+  calculateFinishedProjectDate() {
+    const endDateObj = new Date(this.project.finishDate);
+    const currentDate = new Date();
+
+    const timeDifference = currentDate.getTime() - endDateObj.getTime();
+    return Math.ceil(timeDifference / (1000 * 3600 * 24));
+  }
+
+  calculateFinishedProjectDuration() {
+    const startDateObj = new Date(this.project.startDate);
+    const finishDateObj = new Date(this.project.finishDate);
+
+    const timeDifference = finishDateObj.getTime() - startDateObj.getTime();
+    return Math.ceil(timeDifference / (1000 * 3600 * 24));
+  }
+
+  calculateFinishedProjectLateDate() : string {
+    const endDateObj = new Date(this.project.endDate); //kada turejo buti uzbaigtas
+    const finishDateObj = new Date(this.project.finishDate); //kada realiai uzbaigtas buvo
+
+    const timeDifference = finishDateObj.getTime() - endDateObj.getTime();
+
+    const daysLate = Math.ceil(timeDifference / (1000 * 3600 * 24));
+
+    if(daysLate <= 0)
+      return "nebuvo vėluotas";
+    else
+      return (daysLate + " dienas"); 
+  }
+
+  calculateFinishedProjectEarlierDate() : string {
+    const endDateObj = new Date(this.project.endDate); //kada turejo buti uzbaigtas
+    const finishDateObj = new Date(this.project.finishDate); //kada realiai uzbaigtas buvo
+
+    const timeDifference = endDateObj.getTime() - finishDateObj.getTime();
+
+    const daysLate = Math.ceil(timeDifference / (1000 * 3600 * 24));
+
+    if(daysLate <= 0)
+      return "nebuvo baigtas anksčiau";
+    else
+      return (daysLate + " dienas"); 
+  }
+
+  getProjectTeamMembersCount() {
+    return this.project.teamMembers.length;
+  }
+
+  getProjectTasksCount() {
+    return this.projectTaskStatistics.allTasks;
+  }
+
+  getFinishedTasksCount() {
+    return this.projectTaskStatistics.finishedTasks;
+  }
+
+  getActiveTasksCount() {
+    return this.projectTaskStatistics.activeTasks;
+  }
+
+  getLateDoneTasksCount() {
+    return this.projectTaskStatistics.lateTasks;
+  }
+
+  getEarlierDoneTasksCount() {
+    return this.projectTaskStatistics.earlierDoneTasks;
+  }
+
+  getFinishedProjectComment() {
+    return this.project.projectFinishComment;
+  }
+
+  openTaskStatistics(taskId : number) {
+    this.dialogService.openProjectTaskStatistics(taskId)
+    .afterClosed()
+    .pipe(first())
+    .subscribe();
+  }
 }

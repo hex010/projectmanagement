@@ -15,9 +15,9 @@ import java.util.Date;
 public class TaskFDTO {
     private String name;
     private String description;
+    private TaskPriority taskPriority;
     private Date startDate;
     private Date endDate;
-    private TaskPriority taskPriority;
 
     private int ownerId;
     private int projectId;

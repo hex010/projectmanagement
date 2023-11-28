@@ -8,6 +8,8 @@ export interface ProjectInterface {
     filePath: string;
     startDate : string;
     endDate : string;
+    finishDate : string;
     projectStatus: ProjectStatus;
     teamMembers: UserInterface[];
+    projectFinishComment : string;
 }

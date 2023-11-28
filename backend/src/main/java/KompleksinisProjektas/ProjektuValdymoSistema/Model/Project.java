@@ -33,6 +33,9 @@ public class Project {
     private ProjectStatus projectStatus;
     private String projectFinishComment;
 
+    //statistikos
+    private Date finishDate;
+
     @ManyToOne
     @JoinColumn(name = "team_leader_id")
     private User teamLeader;

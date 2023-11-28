@@ -19,26 +19,34 @@ public class TaskDTO {
     private String name;
     private String description;
     private String filePath;
-    private Date startDate;
-    private Date endDate;
     private TaskPriority taskPriority;
     private TaskStatus taskStatus;
     private boolean warned;
+    private Date startDate;
+    private Date endDate;
 
     private int ownerId;
     private int projectId;
+
+    //statistikos
+    private Date inProgressDate;
+    private Date finishDate;
+    private String taskFinishComment;
 
     public TaskDTO(Task task) {
         this.id = task.getId();
         this.name = task.getName();
         this.description = task.getDescription();
         this.filePath = task.getFilePath();
-        this.startDate = task.getStartDate();
-        this.endDate = task.getEndDate();
         this.taskPriority = task.getTaskPriority();
         this.taskStatus = task.getTaskStatus();
+        this.startDate = task.getStartDate();
+        this.endDate = task.getEndDate();
         this.ownerId = task.getTaskOwner().getId();
         this.projectId = task.getProject().getId();
         this.warned = task.isWarned();
+        this.inProgressDate = task.getInProgressDate();
+        this.finishDate = task.getFinishDate();
+        this.taskFinishComment = task.getTaskFinishComment();
     }
 }

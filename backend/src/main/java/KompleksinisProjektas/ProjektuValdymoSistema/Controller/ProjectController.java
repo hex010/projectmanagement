@@ -48,9 +48,9 @@ public class ProjectController {
     }
 
     @PostMapping("/{projectId}/addUsers")
-    public ResponseEntity<ProjectTeamMembersDTO> addUsersToProjectTeam(
+    public ResponseEntity<List<UserDTO>> addUsersToProjectTeam(
             @PathVariable int projectId, @RequestBody List<Integer> userIds) {
-        ProjectTeamMembersDTO projectTeamMembersDTO = projectService.addUsersToProjectTeam(projectId, userIds);
+        List<UserDTO> projectTeamMembersDTO = projectService.addUsersToProjectTeam(projectId, userIds);
         return ResponseEntity.ok(projectTeamMembersDTO);
     }
 
@@ -58,5 +58,11 @@ public class ProjectController {
     public ResponseEntity<ProjectStatus> finishProject(@RequestBody ProjectFinishFDTO projectFinishFDTO) {
         ProjectStatus projectStatus = projectService.finishProject(projectFinishFDTO);
         return ResponseEntity.ok(projectStatus);
+    }
+
+    @GetMapping("/get/statistics/{projectId}")
+    public ResponseEntity<ProjectTasksStatisticsDTO> getProjectStatistics(@PathVariable int projectId) {
+        ProjectTasksStatisticsDTO projectTasksStatisticsDTO = projectService.getProjectStatistics(projectId);
+        return ResponseEntity.ok(projectTasksStatisticsDTO);
     }
 }

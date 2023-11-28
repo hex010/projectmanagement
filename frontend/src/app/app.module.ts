@@ -39,6 +39,7 @@ import { EditUserComponent } from './edit-user/edit-user.component';
 import { MatTableModule } from '@angular/material/table';
 import { EditUserDialogComponent } from './edit-user-dialog/edit-user-dialog.component';
 import {MatInputModule} from '@angular/material/input';
+import { ProjectTaskStatisticsDialogComponent } from './project-task-statistics-dialog/project-task-statistics-dialog.component';
 
 @NgModule({
   declarations: [
@@ -58,7 +59,8 @@ import {MatInputModule} from '@angular/material/input';
     TaskFinishDialogComponent,
     TaskCommentComponent,
     EditUserComponent,
-    EditUserDialogComponent
+    EditUserDialogComponent,
+    ProjectTaskStatisticsDialogComponent
   ],
   imports: [
     BrowserModule,

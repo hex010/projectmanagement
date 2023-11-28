@@ -93,10 +93,14 @@ public class TaskService {
                     myTasks.add(new TaskDTO(task));
                 }
             }
-        } else {
+        } else if(currentUser.getRole().equals(Role.KOMANDOS_VADOVAS)){
             for (Task task : project.getTasks()) {
                 if(!task.getTaskStatus().equals(TaskStatus.Completed))
                     myTasks.add(new TaskDTO(task));
+            }
+        } else {
+            for (Task task : project.getTasks()) {
+                myTasks.add(new TaskDTO(task));
             }
         }
 

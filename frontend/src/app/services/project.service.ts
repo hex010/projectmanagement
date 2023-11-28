@@ -6,6 +6,8 @@ import { ProjectInterface } from "../models/Project.interface";
 import { Observable } from "rxjs";
 import { ProjectStatus } from "../models/ProjectStatus.enum";
 import { ProjectFinishRequest } from "../models/ProjectFinishRequest.interface";
+import { ProjectTasksStatistics } from "../models/ProjectTasksStatistics.interface";
+import { UserInterface } from "../models/User.interface";
 
 @Injectable()
 export class ProjectService {
@@ -15,6 +17,7 @@ export class ProjectService {
     private addTeamMembersToProjectURL = "http://localhost:8080/ProjektuValdymoSistema/api/v1/project";
     private uploadProjectURL = "http://localhost:8080/ProjektuValdymoSistema/api/v1/project/uploadProjectDocument";
     private finishProjectURL = "http://localhost:8080/ProjektuValdymoSistema/api/v1/project/finish";
+    private getProjectTaskStatistics = "http://localhost:8080/ProjektuValdymoSistema/api/v1/project/get/statistics";
 
     constructor(private http: HttpClient) {}
 
@@ -32,7 +35,7 @@ export class ProjectService {
 
     addUsersToProject(projectId: number, userIDs: number[]) {
         const url = `${this.addTeamMembersToProjectURL}/${projectId}/addUsers`;
-        return this.http.post(url, userIDs);
+        return this.http.post<UserInterface[]>(url, userIDs);
     }
 
     getAssignedProjects(filter : string): Observable<ProjectInterface[]> {
@@ -44,5 +47,17 @@ export class ProjectService {
 
     finishProject(projectFinishRequest : ProjectFinishRequest) {
         return this.http.put<ProjectStatus>(this.finishProjectURL, projectFinishRequest);
+    }
+
+    getProjectStatusKeyByValue(value: string) {
+        const indexOfS = Object.values(ProjectStatus).indexOf(value as ProjectStatus);
+      
+        const key = Object.keys(ProjectStatus)[indexOfS];
+      
+        return key;
+    }
+
+    getProjectTasksStatistics(projectId : number) {
+        return this.http.get<ProjectTasksStatistics>(`${this.getProjectTaskStatistics}/${projectId}`);
     }
 }

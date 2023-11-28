@@ -7,6 +7,7 @@ import { TaskPriority } from '../models/TaskPriority.enum';
 import { TaskAdditionRequestInterface } from '../models/TaskAdditionRequest.interface';
 import { TaskService } from '../services/task.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { TaskAdditionResponseInterface } from '../models/TaskAdditionResponse.interface';
 
 interface ProjectTeamMemberData {
   projectId: number;
@@ -81,33 +82,33 @@ export class ProjectTasksAdditionDialogComponent {
       },
       next: response => { 
         if(this.taskSelectedDocument)
-          this.uploadTaskDocument(response.id);
+          this.uploadTaskDocument(response);
         else {
           this._snackBar.open("Užduotis sėkmingai pridėta komandos nariui", '', {
             duration: 3000,
           });
-          this.dialogRef.close(true)
+          this.dialogRef.close(response)
         }
       },
     });
   }
 
-  uploadTaskDocument(taskId : number) {
+  uploadTaskDocument(response : TaskAdditionResponseInterface) {
     const formData = new FormData();
     formData.append('taskFile', this.taskSelectedDocument);
 
-    this.taskService.uploadTaskDocument(taskId, formData).subscribe({
+    this.taskService.uploadTaskDocument(response.id, formData).subscribe({
       error: err => { 
         this._snackBar.open("Užduotis sėkmingai pridėta komandos nariui, tačiau dokumentą įkelti nepavyko.", '', {
           duration: 3000,
         });
-        this.dialogRef.close(true)
+        this.dialogRef.close(response)
       },
       next: response => {
         this._snackBar.open("Užduotis sėkmingai pridėta komandos nariui", '', {
           duration: 3000,
         });
-        this.dialogRef.close(true)
+        this.dialogRef.close(response)
       },
     });
   }
