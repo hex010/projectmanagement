@@ -1,6 +1,7 @@
 package KompleksinisProjektas.ProjektuValdymoSistema.Configs;
 
 import KompleksinisProjektas.ProjektuValdymoSistema.Exceptions.UserDoesNotExistException;
+import KompleksinisProjektas.ProjektuValdymoSistema.Exceptions.UserIsLockedException;
 import KompleksinisProjektas.ProjektuValdymoSistema.Model.User;
 import KompleksinisProjektas.ProjektuValdymoSistema.Service.UserService;
 import jakarta.servlet.FilterChain;
@@ -16,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import javax.security.auth.login.AccountLockedException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +42,10 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
 
         if(!user.getPassword().equals(password)) {
             throw new UserDoesNotExistException("Vartotojo prisijungimo duomenys neteisingi.");
+        }
+
+        if(!user.isAccountNonLocked()) {
+            throw new UserIsLockedException("Paskyra užblokuota");
         }
 
         String userRole = user.getRole().toString();

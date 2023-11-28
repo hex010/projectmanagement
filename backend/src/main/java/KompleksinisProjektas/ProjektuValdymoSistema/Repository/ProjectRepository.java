@@ -9,5 +9,6 @@ import java.util.List;
 public interface ProjectRepository extends JpaRepository<Project, Integer> {
     Project findByName(String name);
     List<Project> findByTeamLeaderIdAndProjectStatus(Integer teamLeader_id, ProjectStatus projectStatus);
-
+    List<Project> findByTeamLeaderId(Integer id);
+    List<Project> findByProjectStatus(ProjectStatus projectStatus);
 }

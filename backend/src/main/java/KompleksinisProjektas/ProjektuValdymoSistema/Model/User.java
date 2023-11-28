@@ -1,5 +1,6 @@
 package KompleksinisProjektas.ProjektuValdymoSistema.Model;
 
+import KompleksinisProjektas.ProjektuValdymoSistema.dtos.EditUserDTO;
 import KompleksinisProjektas.ProjektuValdymoSistema.dtos.UserAddRequestFDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -76,5 +77,13 @@ public class User implements UserDetails {
         email = registerRequest.getEmail();
         password = registerRequest.getPassword();
         role = registerRequest.getRole();
+    }
+
+    public void setUpdateData(EditUserDTO editUserDTO) {
+        this.email = editUserDTO.getEmail();
+        this.firstname = editUserDTO.getFirstname();
+        this.lastname = editUserDTO.getLastname();
+        this.accountNonLocked = !editUserDTO.getBanned().equals("Taip");
+        this.role = editUserDTO.getRole();
     }
 }

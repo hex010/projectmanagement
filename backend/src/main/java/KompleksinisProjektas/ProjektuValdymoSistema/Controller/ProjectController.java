@@ -42,8 +42,8 @@ public class ProjectController {
     }
 
     @GetMapping("/get/assigned")
-    public ResponseEntity<List<ProjectDTO>> getAssignedProjects() {
-        List<ProjectDTO> projectDTOs = projectService.getAssignedProjects();
+    public ResponseEntity<List<ProjectDTO>> getAssignedProjects(@RequestParam(value = "filter", required = false, defaultValue = "Vykdomi") String filterOption) {
+        List<ProjectDTO> projectDTOs = projectService.getAssignedProjects(filterOption);
         return ResponseEntity.ok(projectDTOs);
     }
 

@@ -49,12 +49,7 @@ export class LoginComponent {
           this.loginError = err.error.message;
       },
       next: response => {
-        const userRole = response.role as unknown as keyof typeof Role;
-        if (userRole in Role) {
-          localStorage.setItem('role', Role[userRole]);
-        } else {
-          localStorage.setItem('role', Role.Team_member);
-        }
+        localStorage.setItem('role', response.role.toString());
         localStorage.setItem('email', response.email);
         localStorage.setItem('password', response.password);
         localStorage.setItem('firstname', response.firstname);

@@ -13,7 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 
-
 @RestController
 @RequestMapping("/api/v1/task")
 @RequiredArgsConstructor
@@ -64,5 +63,11 @@ public class TaskController {
     public ResponseEntity<List<TaskCommentDTO>> getTaskComments(@PathVariable int taskId) {
         List<TaskCommentDTO> taskCommentDTOs = taskService.getTaskComments(taskId);
         return ResponseEntity.ok(taskCommentDTOs);
+    }
+
+    @PostMapping("/generate")
+    public ResponseEntity<Void> generateComments() {
+        taskService.generateCommentsWithReplies();
+        return ResponseEntity.ok().build();
     }
 }

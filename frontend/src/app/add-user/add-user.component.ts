@@ -30,7 +30,7 @@ export class AddUserComponent {
         password: ['', [Validators.required]],
         firstname: ['', [Validators.required]],
         lastname: ['', [Validators.required]],
-        role: [Role.Team_member, [Validators.required]]
+        role: [Role.KOMANDOS_NARYS.toString(), [Validators.required]]
     });
   }
 
@@ -45,7 +45,7 @@ export class AddUserComponent {
     const password = this.addUserForm.value.password;
     const firstname = this.addUserForm.value.firstname;
     const lastname = this.addUserForm.value.lastname;
-    const role = this.userService.getRoleKeyByValue(this.addUserForm.value.role);
+    const role = this.addUserForm.value.role;
 
     const userData: UserAddRequestInterface = {
       email: email,

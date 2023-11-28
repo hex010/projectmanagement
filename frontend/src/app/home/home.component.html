@@ -6,17 +6,36 @@
 <div *ngIf="isDirectorRole()" class="page-header m-3 p-2">
     <h1>Administravimo valdymo juosta</h1>
     <button class="btn btn-secondary" (click)="navigateToAddUser()" id="addUserButton">Pridėti naudotoją</button>
+    <span class="button-spacing"></span>
+    <button class="btn btn-secondary" (click)="navigateToEditUsers()" id="editUsersButton">Redaguoti naudotojus</button>
 </div>
 
 
 <div class="assignedProjects m-3 p-2">
     <div class="assignedProjectsHeading">
         <h1 class="m-0" id="projectTeamMembersLabel">Priskirti projektai ({{assignedProjects.length}})</h1>
+        
+        <!--
+        <select class="form-control" (change)="filterProjects()" id="taskStatusFilter" style="width: auto;">
+            <option value="Vykdomi">Vykdomi</option>
+            <option value="Pasibaigę">Pasibaigę</option>
+            <option value="Visi">Visi</option>
+        </select>
+        -->
+        <mat-form-field appearance="fill" style="margin-bottom: -1.25em">
+            <mat-label>Filtras</mat-label>
+            <mat-select matNativeControl [(value)]="defaultFilterSelectedValue" (selectionChange)="filterProjects($event)" id="taskStatusFilter" style="align-items: center;">
+                <mat-option value="Vykdomi">Vykdomi</mat-option>
+                <mat-option value="Pasibaigę">Pasibaigę</mat-option>
+                <mat-option value="Visi">Visi</mat-option>
+            </mat-select>
+        </mat-form-field>
     </div>
     <mat-card *ngFor="let project of assignedProjects" class="my-2">
          <mat-card-header>
             <mat-card-title>{{project.name}}</mat-card-title>
             <mat-card-subtitle>{{ project.description }}</mat-card-subtitle>
+            <mat-card-subtitle>Statusas: {{ project.projectStatus }}</mat-card-subtitle>
           </mat-card-header>
           <mat-card-actions>
             <button mat-button (click)="openProjectPage(project.id)" id="addNewTaskButton">Peržiūrėti</button>

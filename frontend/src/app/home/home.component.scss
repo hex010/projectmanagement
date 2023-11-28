@@ -11,4 +11,12 @@
 
 .assignedProjectsHeading {
     width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.button-spacing {
+    margin-left: 15px;
 }

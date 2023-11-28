@@ -1,0 +1,55 @@
+<div mat-dialog-content>
+    <h2 class="text-center" id="userEditionLabel">Naudotojo redagavimas</h2>
+    
+    <form [formGroup]="userEditionForm" class="text-center">
+        <mat-form-field class="mb-3 w-100" appearance="outline">
+            <mat-label>El. paštas</mat-label>
+            <input matInput formControlName="email" placeholder="El. paštas" required>
+            <mat-error id="emailRequiredError" *ngIf="submitted && userEditionForm.get('email')?.hasError('required')">
+                El. paštas yra privalomas.
+            </mat-error>
+            <mat-error id="emailFormatError" *ngIf="submitted && userEditionForm.get('email')?.hasError('email')">
+                El. pašto formatas neteisingas.
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="mb-3 w-100" appearance="outline">
+            <mat-label>Vardas</mat-label>
+            <input matInput formControlName="firstname" placeholder="Vardas" required>
+            <mat-error id="firstnameRequiredError" *ngIf="submitted && userEditionForm.get('firstname')?.hasError('required')">
+                Vardas yra privalomas.
+            </mat-error>
+        </mat-form-field>
+        
+        <mat-form-field class="mb-3 w-100" appearance="outline">
+            <mat-label>Pavardė</mat-label>
+            <input matInput formControlName="lastname" placeholder="Pavardė" required>
+            <mat-error id="surnameRequiredError" *ngIf="submitted && userEditionForm.get('lastname')?.hasError('required')">
+                Pavardė yra privaloma.
+            </mat-error>
+        </mat-form-field>
+        
+        <mat-form-field class="mb-3 w-100" appearance="outline">
+            <mat-label>Ar užblokuotas?</mat-label>
+            <mat-select formControlName="banned">
+                <mat-option value="Taip">Taip</mat-option>
+                <mat-option value="Ne">Ne</mat-option>
+            </mat-select>
+        </mat-form-field>
+        
+        <mat-form-field class="mb-3 w-100" appearance="outline">
+            <mat-label>Rolė</mat-label>
+            <mat-select formControlName="role">
+                <mat-option *ngFor="let role of roles" [value]="role">
+                    {{ role | titlecase }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>        
+
+        <span *ngIf="serverError" class="text-danger d-block text-center" id="errorFromServerLabel">{{ serverError }}</span> 
+    </form>
+</div>
+
+<div mat-dialog-actions class="justify-content-center">
+    <button mat-raised-button color="primary" type="submit" (click)="updateUser()" id="updateUserButton" [disabled]="userEditionForm.pristine">Atnaujinti</button>
+</div>

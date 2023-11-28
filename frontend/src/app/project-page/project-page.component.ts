@@ -43,15 +43,15 @@ export class ProjectPageComponent {
   }
 
   isDirectorRole() : boolean {
-    return this._auth.getRole() == Role.Director
+    return this._auth.getRole() === Role.DIREKTORIUS.toString();
   }
 
   isTeamLeaderRole() : boolean {
-    return this._auth.getRole() == Role.Team_leader;
+    return this._auth.getRole() === Role.KOMANDOS_VADOVAS.toString();
   }
 
   isTeamMemberRole() : boolean {
-    return this._auth.getRole() == Role.Team_member
+    return this._auth.getRole() === Role.KOMANDOS_NARYS.toString();
   }
 
   addTasksToTeamMember(userID : number) {

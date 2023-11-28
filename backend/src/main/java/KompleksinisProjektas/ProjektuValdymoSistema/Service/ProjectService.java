@@ -56,7 +56,7 @@ public class ProjectService {
             User user = userRepository.findById(userId)
                     .orElseThrow(() -> new UserDoesNotExistException("Naudotojas su ID: " + userId + " neegzistuoja"));
 
-            if(!user.getRole().equals(Role.Team_member)) {
+            if(!user.getRole().equals(Role.KOMANDOS_NARYS)) {
                 throw new UserRoleNotMatch("Naudotojas su ID " + userId + ", jo rolė nėra komandos nario.");
             }
             if (!project.getTeamMembers().contains(user)) {
@@ -96,7 +96,7 @@ public class ProjectService {
         projectRepository.save(project);
     }
 
-    public List<ProjectDTO> getAssignedProjects() {
+    public List<ProjectDTO> getAssignedProjects(String filterOption) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = (String) authentication.getPrincipal();
         User currentUser = userRepository.findByEmail(email)
@@ -104,23 +104,108 @@ public class ProjectService {
 
         List<Project> assignedProjects;
 
-        if(currentUser.getRole() == Role.Team_leader) {
-            assignedProjects = projectRepository.findByTeamLeaderIdAndProjectStatus(currentUser.getId(), ProjectStatus.InProgress);
+        switch (filterOption) {
+            case "Vykdomi": {
+                assignedProjects = getAssignedProjectsWithIngoingFilter(currentUser);
+                break;
+            }
+            case "Pasibaigę": {
+                assignedProjects = getAssignedProjectsWithFinishedFilter(currentUser);
+                break;
+            }
+            case "Visi": {
+                assignedProjects = getAssignedProjectsWithAllFilter(currentUser);
+                break;
+            }
+            default:{
+                throw new IllegalArgumentException("Netinkamas filtras: " + filterOption);
+            }
         }
-        else if(currentUser.getRole() == Role.Team_member) {
-            assignedProjects = currentUser.getProjects()
-                    .stream()
-                    .filter(project -> project.getProjectStatus() == ProjectStatus.InProgress)
-                    .toList();
-        } else {
-            assignedProjects = projectRepository.findAll();
-        }
+
         List<ProjectDTO> assignedProjectsDTOs = new ArrayList<>();
         for(Project assignedProject : assignedProjects) {
             assignedProjectsDTOs.add(new ProjectDTO(assignedProject));
         }
 
         return assignedProjectsDTOs;
+    }
+
+    private List<Project> getAssignedProjectsWithAllFilter(User currentUser) {
+        List<Project> assignedProjects;
+
+        switch (currentUser.getRole()) {
+            case KOMANDOS_VADOVAS: {
+                assignedProjects = projectRepository.findByTeamLeaderId(currentUser.getId());
+                break;
+            }
+            case KOMANDOS_NARYS: {
+                assignedProjects = currentUser.getProjects();
+                break;
+            }
+            case DIREKTORIUS: {
+                assignedProjects = projectRepository.findAll();
+                break;
+            }
+            default:{
+                throw new IllegalArgumentException("Netinkama rolė: " + currentUser.getRole().name());
+            }
+        }
+
+        return assignedProjects;
+    }
+
+    private List<Project> getAssignedProjectsWithFinishedFilter(User currentUser) {
+        List<Project> assignedProjects;
+
+        switch (currentUser.getRole()) {
+            case KOMANDOS_VADOVAS: {
+                assignedProjects = projectRepository.findByTeamLeaderIdAndProjectStatus(currentUser.getId(), ProjectStatus.Finished);
+                break;
+            }
+            case KOMANDOS_NARYS: {
+                assignedProjects = currentUser.getProjects()
+                        .stream()
+                        .filter(project -> project.getProjectStatus() == ProjectStatus.Finished)
+                        .toList();
+                break;
+            }
+            case DIREKTORIUS: {
+                assignedProjects = projectRepository.findByProjectStatus(ProjectStatus.Finished);
+                break;
+            }
+            default:{
+                throw new IllegalArgumentException("Netinkama rolė: " + currentUser.getRole().name());
+            }
+        }
+
+        return assignedProjects;
+    }
+
+    private List<Project> getAssignedProjectsWithIngoingFilter(User currentUser) {
+        List<Project> assignedProjects;
+
+        switch (currentUser.getRole()) {
+            case KOMANDOS_VADOVAS: {
+                assignedProjects = projectRepository.findByTeamLeaderIdAndProjectStatus(currentUser.getId(), ProjectStatus.InProgress);
+                break;
+            }
+            case KOMANDOS_NARYS: {
+                assignedProjects = currentUser.getProjects()
+                        .stream()
+                        .filter(project -> project.getProjectStatus() == ProjectStatus.InProgress)
+                        .toList();
+                break;
+            }
+            case DIREKTORIUS: {
+                assignedProjects = projectRepository.findByProjectStatus(ProjectStatus.InProgress);
+                break;
+            }
+            default:{
+                throw new IllegalArgumentException("Netinkama rolė: " + currentUser.getRole().name());
+            }
+        }
+
+        return assignedProjects;
     }
 
     public ProjectStatus finishProject(ProjectFinishFDTO projectFinishFDTO) {

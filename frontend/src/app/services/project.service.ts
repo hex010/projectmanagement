@@ -1,4 +1,4 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { ProjectCreationRequestInterface } from "../models/ProjectCreationRequest.interface";
 import { ProjectCreationResponseInterface } from "../models/ProjectCreationRespons.interface";
@@ -35,8 +35,11 @@ export class ProjectService {
         return this.http.post(url, userIDs);
     }
 
-    getAssignedProjects(): Observable<ProjectInterface[]> {
-        return this.http.get<ProjectInterface[]>(this.getAssignedProjectsURL);
+    getAssignedProjects(filter : string): Observable<ProjectInterface[]> {
+        let myparams = new HttpParams();
+        myparams = myparams.set('filter', filter);
+
+        return this.http.get<ProjectInterface[]>(this.getAssignedProjectsURL, {params: myparams});
     }
 
     finishProject(projectFinishRequest : ProjectFinishRequest) {

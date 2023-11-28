@@ -7,6 +7,8 @@ import { ProjectFinishDialogComponent } from "../project-finish-dialog/project-f
 import { TaskFinishDialogComponent } from "../task-finish-dialog/task-finish-dialog.component";
 import { TaskCommentReplyDialogComponent } from "../task-comment-reply-dialog/task-comment-reply-dialog.component";
 import { TaskCommentInterface } from "../models/TaskComment.interface";
+import { EditUserDialogComponent } from "../edit-user-dialog/edit-user-dialog.component";
+import { EditUserInterface } from "../models/EditUser.interface";
 
 @Injectable()
 export class DialogService {
@@ -48,6 +50,13 @@ export class DialogService {
         return this.dialog.open(TaskCommentReplyDialogComponent, {
             width: '500px',
             data: comment
+        });
+    }
+
+    openEditUserDialog(user : EditUserInterface) : MatDialogRef<EditUserDialogComponent> {
+        return this.dialog.open(EditUserDialogComponent, {
+            width: '500px',
+            data: user
         });
     }
 }

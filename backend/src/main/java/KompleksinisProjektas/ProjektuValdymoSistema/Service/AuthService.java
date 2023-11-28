@@ -1,6 +1,7 @@
 package KompleksinisProjektas.ProjektuValdymoSistema.Service;
 
 import KompleksinisProjektas.ProjektuValdymoSistema.Exceptions.UserDoesNotExistException;
+import KompleksinisProjektas.ProjektuValdymoSistema.Exceptions.UserIsLockedException;
 import KompleksinisProjektas.ProjektuValdymoSistema.Model.User;
 import KompleksinisProjektas.ProjektuValdymoSistema.dtos.LoginRequestDTO;
 import KompleksinisProjektas.ProjektuValdymoSistema.dtos.LoginRequestFDTO;
@@ -17,6 +18,10 @@ public class AuthService {
 
         if(!user.getPassword().equals(loginRequest.getPassword())) {
             throw new UserDoesNotExistException("Naudotojas nerastas");
+        }
+
+        if(!user.isAccountNonLocked()) {
+            throw new UserIsLockedException("Paskyra užblokuota");
         }
 
         return new LoginRequestDTO(user.getEmail(), user.getRole(), user.getPassword(), user.getFirstname(), user.getLastname());

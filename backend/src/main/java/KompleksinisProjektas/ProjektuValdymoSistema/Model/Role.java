@@ -1,5 +1,5 @@
 package KompleksinisProjektas.ProjektuValdymoSistema.Model;
 
 public enum Role {
-    Director, Team_leader, Team_member
+    DIREKTORIUS, KOMANDOS_VADOVAS, KOMANDOS_NARYS
 }

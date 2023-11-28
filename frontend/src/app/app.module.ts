@@ -35,6 +35,10 @@ import { ProjectFinishDialogComponent } from './project-finish-dialog/project-fi
 import { TaskFinishDialogComponent } from './task-finish-dialog/task-finish-dialog.component';
 import { TaskCommentComponent } from './task-comment/task-comment.component';
 import { TaskCommentReplyDialogComponent } from './task-comment-reply-dialog/task-comment-reply-dialog.component';
+import { EditUserComponent } from './edit-user/edit-user.component';
+import { MatTableModule } from '@angular/material/table';
+import { EditUserDialogComponent } from './edit-user-dialog/edit-user-dialog.component';
+import {MatInputModule} from '@angular/material/input';
 
 @NgModule({
   declarations: [
@@ -52,7 +56,9 @@ import { TaskCommentReplyDialogComponent } from './task-comment-reply-dialog/tas
     ProjectTaskPageComponent,
     ProjectFinishDialogComponent,
     TaskFinishDialogComponent,
-    TaskCommentComponent
+    TaskCommentComponent,
+    EditUserComponent,
+    EditUserDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -65,7 +71,9 @@ import { TaskCommentReplyDialogComponent } from './task-comment-reply-dialog/tas
     MatSelectModule,
     BrowserAnimationsModule,
     MatButtonModule,
-    MatCardModule
+    MatCardModule,
+    MatTableModule,
+    MatInputModule
   ],
   providers: [
     AuthenticationService,
