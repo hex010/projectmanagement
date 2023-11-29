@@ -1,8 +1,8 @@
 <div *ngIf="!isTeamMemberRole()" class="page-header m-3 p-2">
     <h1>Projekto valdymo juosta</h1>
-    <button class="btn btn-secondary" [disabled]="isProjectFinished()" (click)="addTeamMembers()" id="addTeamMembersButton">Pridėti komandos narius (-į)</button>
+    <button class="btn btn-secondary" [disabled]="isProjectFinished() || isDirectorRole()" (click)="addTeamMembers()" id="addTeamMembersButton">Pridėti komandos narius (-į)</button>
     <span class="button-spacing"></span>
-    <button class="btn btn-secondary" [disabled]="isProjectFinished()" (click)="finishProject()" id="finishProjectButton">Užbaigti projektą</button>
+    <button class="btn btn-secondary" [disabled]="isProjectFinished() || isDirectorRole()" (click)="finishProject()" id="finishProjectButton">Užbaigti projektą</button>
     
     <span *ngIf="isDirectorRole()" class="button-spacing"></span>
     <button *ngIf="isDirectorRole()" class="btn btn-secondary" (click)="generateProjectReport()" [disabled]="generatingReport" id="generateReportButton">Generuoti ataskaitą</button>
@@ -18,7 +18,7 @@
             <mat-card-title>{{ teamMember.firstname }} {{ teamMember.lastname }}</mat-card-title>
           </mat-card-content>
           <mat-card-actions>
-            <button mat-button [disabled]="isProjectFinished()" (click)="addTasksToTeamMember(teamMember.id)" id="addNewTaskButton">Priskirti naują užduotį</button>
+            <button mat-button [disabled]="isProjectFinished() || isDirectorRole()" (click)="addTasksToTeamMember(teamMember.id)" id="addNewTaskButton">Priskirti naują užduotį</button>
           </mat-card-actions>
     </mat-card>
 </div>
@@ -60,29 +60,34 @@
         <h3 class="d-inline"><b>{{project.endDate| date:'yyyy-MM-dd'}}</b></h3>
     </div>
 
+    <div *ngIf="isProjectFinished()" class="projectNotFinished">
+        <h2 class="d-inline">Projektas baigėsi: </h2> 
+        <h3 class="d-inline"><b>{{project.finishDate | date:'yyyy-MM-dd'}}</b></h3>
+    </div>
+
     <div *ngIf="!isProjectFinished()" class="projectNotFinished">
         <h2 class="d-inline">Projektas vykdomas: </h2> 
-        <h3 class="d-inline"><b>{{calculateIngoingProjectDate()}} dienų</b></h3>
+        <h3 class="d-inline"><b>{{calculateIngoingProjectDate()}} dienas</b></h3>
     </div>
 
     <div *ngIf="isProjectFinished()" class="projectFinishedDays">
         <h2 class="d-inline">Projektas baigtas prieš: </h2> 
-        <h3 class="d-inline"><b>{{calculateFinishedProjectDate()}} dienų</b></h3>
+        <h3 class="d-inline"><b>{{calculateFinishedProjectDate()}} dienas</b></h3>
     </div>
 
     <div *ngIf="isProjectFinished()" class="projectFinished">
         <h2 class="d-inline">Projektas buvo vykdomas: </h2> 
-        <h3 class="d-inline"><b>{{calculateFinishedProjectDuration()}} dienų</b></h3>
+        <h3 class="d-inline"><b>{{calculateFinishedProjectDuration()}} dienas</b></h3>
     </div>
 
     <div *ngIf="isProjectFinished()" class="projectFinishedLate">
         <h2 class="d-inline">Projektas buvo vėluotas: </h2> 
-        <h3 class="d-inline"><b>{{calculateFinishedProjectLateDate()}} dienų</b></h3>
+        <h3 class="d-inline"><b>{{calculateFinishedProjectLateDate()}}</b></h3>
     </div>
 
     <div *ngIf="isProjectFinished()" class="projectFinishedEarlier">
         <h2 class="d-inline">Projektas buvo baigtas anksčiau: </h2> 
-        <h3 class="d-inline"><b>{{calculateFinishedProjectEarlierDate()}} dienom</b></h3>
+        <h3 class="d-inline"><b>{{calculateFinishedProjectEarlierDate()}}</b></h3>
     </div>
 
     <div *ngIf="isProjectFinished()" class="projectFinishedComment">

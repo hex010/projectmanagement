@@ -19,6 +19,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 @AllArgsConstructor
@@ -120,6 +121,9 @@ public class TaskService {
 
         if(taskStatusUpdateFDTO.getTaskStatus() == TaskStatus.Completed) {
             task.setTaskFinishComment(taskStatusUpdateFDTO.getTaskFinishComment());
+            task.setFinishDate(new Date());
+        } else if(taskStatusUpdateFDTO.getTaskStatus() == TaskStatus.InProgress) {
+            task.setInProgressDate(new Date());
         }
 
         task = taskRepository.save(task);

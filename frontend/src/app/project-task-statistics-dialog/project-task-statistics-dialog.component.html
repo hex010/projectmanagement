@@ -25,27 +25,27 @@
 
     <div *ngIf="!isTaskFinished()" class="taskNotFinished">
         <h2 class="d-inline">Užduotis vykdoma: </h2> 
-        <h3 class="d-inline"><b>{{calculateIngoingTaskDate()}} dienų</b></h3>
+        <h3 class="d-inline"><b>{{calculateIngoingTaskDate()}} dienas</b></h3>
     </div>
 
     <div *ngIf="isTaskFinished()" class="taskFinishedDays">
         <h2 class="d-inline">Užduotis baigta prieš: </h2> 
-        <h3 class="d-inline"><b>{{calculateFinishedTaskDate()}} dienų</b></h3>
+        <h3 class="d-inline"><b>{{calculateFinishedTaskDate()}} dienas</b></h3>
     </div>
 
     <div *ngIf="isTaskFinished()" class="taskFinished">
         <h2 class="d-inline">Užduotis buvo vykdoma: </h2> 
-        <h3 class="d-inline"><b>{{calculateFinishedTaskDuration()}} dienų</b></h3>
+        <h3 class="d-inline"><b>{{calculateFinishedTaskDuration()}} dienas</b></h3>
     </div>
 
     <div *ngIf="isTaskFinished()" class="taskFinishedLate">
         <h2 class="d-inline">Užduotis buvo vėluota: </h2> 
-        <h3 class="d-inline"><b>{{calculateFinishedTaskLateDate()}} dienų</b></h3>
+        <h3 class="d-inline"><b>{{calculateFinishedTaskLateDate()}}</b></h3>
     </div>
 
     <div *ngIf="isTaskFinished()" class="taskFinishedEarlier">
         <h2 class="d-inline">Užduotis buvo baigta anksčiau: </h2> 
-        <h3 class="d-inline"><b>{{calculateFinishedTaskEarlierDate()}} dienom</b></h3>
+        <h3 class="d-inline"><b>{{calculateFinishedTaskEarlierDate()}}</b></h3>
     </div>
 
     <div *ngIf="isTaskFinished()" class="taskFinishedComment">

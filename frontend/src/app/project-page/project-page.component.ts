@@ -207,7 +207,7 @@ export class ProjectPageComponent {
     if(daysLate <= 0)
       return "nebuvo baigtas anksčiau";
     else
-      return (daysLate + " dienas"); 
+      return (daysLate + " dienom"); 
   }
 
   getProjectTeamMembersCount() {
