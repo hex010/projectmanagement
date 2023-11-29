@@ -5,6 +5,8 @@ import KompleksinisProjektas.ProjektuValdymoSistema.Model.ProjectStatus;
 import KompleksinisProjektas.ProjektuValdymoSistema.Service.ProjectService;
 import KompleksinisProjektas.ProjektuValdymoSistema.dtos.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -64,5 +66,16 @@ public class ProjectController {
     public ResponseEntity<ProjectTasksStatisticsDTO> getProjectStatistics(@PathVariable int projectId) {
         ProjectTasksStatisticsDTO projectTasksStatisticsDTO = projectService.getProjectStatistics(projectId);
         return ResponseEntity.ok(projectTasksStatisticsDTO);
+    }
+
+    @GetMapping("/get/report/{projectId}")
+    public ResponseEntity<byte[]> generateProjectReport(@PathVariable int projectId) throws IOException {
+        byte[] pdfBytes = projectService.generateProjectReport(projectId);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDispositionFormData("inline", "ProjectReport.pdf");
+
+        return ResponseEntity.ok().headers(headers).body(pdfBytes);
     }
 }

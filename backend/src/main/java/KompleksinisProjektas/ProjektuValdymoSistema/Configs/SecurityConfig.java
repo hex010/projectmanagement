@@ -38,6 +38,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/user/update").hasAuthority(Role.DIREKTORIUS.name())
                         .requestMatchers("/api/v1/user/getAll").hasAuthority(Role.DIREKTORIUS.name())
                         .requestMatchers("/api/v1/project/get/statistics/{projectId}").hasAnyAuthority(Role.KOMANDOS_VADOVAS.name(), Role.DIREKTORIUS.name())
+                        .requestMatchers("/api/v1/project/get/report/{projectId}").hasAuthority(Role.DIREKTORIUS.name())
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(corsFilter, ChannelProcessingFilter.class)

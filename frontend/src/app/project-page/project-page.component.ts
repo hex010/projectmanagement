@@ -13,7 +13,6 @@ import { ProjectStatus } from '../models/ProjectStatus.enum';
 import { ProjectFinishRequest } from '../models/ProjectFinishRequest.interface';
 import { ProjectTasksStatistics } from '../models/ProjectTasksStatistics.interface';
 import { TaskStatus } from '../models/TaskStatus.enum';
-import { UserInterface } from '../models/User.interface';
 
 @Component({
   selector: 'app-project-page',
@@ -24,6 +23,7 @@ export class ProjectPageComponent {
   public project!: ProjectInterface;
   public assignedTasks: TaskAdditionResponseInterface[] = [];
   public projectTaskStatistics!: ProjectTasksStatistics;
+  public generatingReport!: boolean;
 
   constructor(private route: ActivatedRoute, 
     private router: Router, 
@@ -243,5 +243,25 @@ export class ProjectPageComponent {
     .afterClosed()
     .pipe(first())
     .subscribe();
+  }
+
+  generateProjectReport() {
+    this.generatingReport = true;
+    this.projectService.generateProjectReport(this.project.id).subscribe(
+      (data) => {
+        this.dialogService.openPdfViewerDialog(data)
+        .afterClosed()
+        .pipe(first())
+        .subscribe();
+
+        this.generatingReport = false;
+      },
+      (error) => {
+        this.generatingReport = false;
+        this._snackBar.open(error, '', {
+          duration: 3000,
+        });
+      }
+    );
   }
 }

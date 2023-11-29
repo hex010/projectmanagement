@@ -3,6 +3,9 @@
     <button class="btn btn-secondary" [disabled]="isProjectFinished()" (click)="addTeamMembers()" id="addTeamMembersButton">Pridėti komandos narius (-į)</button>
     <span class="button-spacing"></span>
     <button class="btn btn-secondary" [disabled]="isProjectFinished()" (click)="finishProject()" id="finishProjectButton">Užbaigti projektą</button>
+    
+    <span *ngIf="isDirectorRole()" class="button-spacing"></span>
+    <button *ngIf="isDirectorRole()" class="btn btn-secondary" (click)="generateProjectReport()" [disabled]="generatingReport" id="generateReportButton">Generuoti ataskaitą</button>
 </div>
 
 <div *ngIf="!isTeamMemberRole()" class="team-members mx-3 p-2">

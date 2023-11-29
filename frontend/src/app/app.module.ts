@@ -40,6 +40,7 @@ import { MatTableModule } from '@angular/material/table';
 import { EditUserDialogComponent } from './edit-user-dialog/edit-user-dialog.component';
 import {MatInputModule} from '@angular/material/input';
 import { ProjectTaskStatisticsDialogComponent } from './project-task-statistics-dialog/project-task-statistics-dialog.component';
+import { PdfViewerDialogComponent } from './pdf-viewer-dialog/pdf-viewer-dialog.component';
 
 @NgModule({
   declarations: [
@@ -60,7 +61,8 @@ import { ProjectTaskStatisticsDialogComponent } from './project-task-statistics-
     TaskCommentComponent,
     EditUserComponent,
     EditUserDialogComponent,
-    ProjectTaskStatisticsDialogComponent
+    ProjectTaskStatisticsDialogComponent,
+    PdfViewerDialogComponent
   ],
   imports: [
     BrowserModule,

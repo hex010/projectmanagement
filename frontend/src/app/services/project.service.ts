@@ -1,13 +1,14 @@
-import { HttpClient, HttpParams } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { ProjectCreationRequestInterface } from "../models/ProjectCreationRequest.interface";
 import { ProjectCreationResponseInterface } from "../models/ProjectCreationRespons.interface";
 import { ProjectInterface } from "../models/Project.interface";
-import { Observable } from "rxjs";
+import { Observable, map } from "rxjs";
 import { ProjectStatus } from "../models/ProjectStatus.enum";
 import { ProjectFinishRequest } from "../models/ProjectFinishRequest.interface";
 import { ProjectTasksStatistics } from "../models/ProjectTasksStatistics.interface";
 import { UserInterface } from "../models/User.interface";
+import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 
 @Injectable()
 export class ProjectService {
@@ -17,9 +18,10 @@ export class ProjectService {
     private addTeamMembersToProjectURL = "http://localhost:8080/ProjektuValdymoSistema/api/v1/project";
     private uploadProjectURL = "http://localhost:8080/ProjektuValdymoSistema/api/v1/project/uploadProjectDocument";
     private finishProjectURL = "http://localhost:8080/ProjektuValdymoSistema/api/v1/project/finish";
-    private getProjectTaskStatistics = "http://localhost:8080/ProjektuValdymoSistema/api/v1/project/get/statistics";
+    private getProjectTaskStatisticsURL = "http://localhost:8080/ProjektuValdymoSistema/api/v1/project/get/statistics";
+    private getProjectReportURL = "http://localhost:8080/ProjektuValdymoSistema/api/v1/project/get/report";
 
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient, private sanitizer: DomSanitizer) {}
 
     createProject(projectData: ProjectCreationRequestInterface) {
         return this.http.post<ProjectCreationResponseInterface>(this.projectCreationURL, projectData);
@@ -58,6 +60,21 @@ export class ProjectService {
     }
 
     getProjectTasksStatistics(projectId : number) {
-        return this.http.get<ProjectTasksStatistics>(`${this.getProjectTaskStatistics}/${projectId}`);
+        return this.http.get<ProjectTasksStatistics>(`${this.getProjectTaskStatisticsURL}/${projectId}`);
+    }
+
+    generateProjectReport(projectId : number): Observable<SafeResourceUrl> {
+        return this.http
+          .get(`${this.getProjectReportURL}/${projectId}`, {
+            responseType: 'arraybuffer',
+            headers: new HttpHeaders({ 'Content-Type': 'application/pdf' }),
+          })
+          .pipe(
+            map((response: ArrayBuffer) => {
+              const blob = new Blob([response], { type: 'application/pdf' });
+              const pdfUrl = URL.createObjectURL(blob);
+              return this.sanitizer.bypassSecurityTrustResourceUrl(pdfUrl);
+            })
+          );
     }
 }

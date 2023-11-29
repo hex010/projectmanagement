@@ -10,6 +10,7 @@ import { TaskCommentInterface } from "../models/TaskComment.interface";
 import { EditUserDialogComponent } from "../edit-user-dialog/edit-user-dialog.component";
 import { EditUserInterface } from "../models/EditUser.interface";
 import { ProjectTaskStatisticsDialogComponent } from "../project-task-statistics-dialog/project-task-statistics-dialog.component";
+import { PdfViewerDialogComponent } from "../pdf-viewer-dialog/pdf-viewer-dialog.component";
 
 @Injectable()
 export class DialogService {
@@ -65,6 +66,14 @@ export class DialogService {
         return this.dialog.open(ProjectTaskStatisticsDialogComponent, {
             width: '500px',
             data: taskId
+        });
+    }
+
+    openPdfViewerDialog(projectPDFreport : any): MatDialogRef<PdfViewerDialogComponent> {
+        return this.dialog.open(PdfViewerDialogComponent, {
+            width: '100%',
+            height: '100vh',
+            data: projectPDFreport
         });
     }
 }
